@@ -9,7 +9,7 @@ export default function EngagementTab() {
   const e = data.engagement;
 
   return (
-    <div className="px-6 py-6 grid grid-cols-1 lg:grid-cols-2 gap-5">
+    <div className="px-6 py-6 grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
       <Card title="Likes">
         <RetentionChart
           sentence={{ before: "Most viewers liked this video at", after: ". Play the video below to see when they liked it." }}

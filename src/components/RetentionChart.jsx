@@ -29,6 +29,7 @@ export default function RetentionChart({
   onChangeY,
 }) {
   const firstPct = data[0]?.pct ?? 0;
+  const [scrub, setScrub] = useState(0);
 
   return (
     <div>
@@ -64,7 +65,7 @@ export default function RetentionChart({
               type="monotone"
               dataKey="pct"
               stroke="var(--tt-accent)"
-              strokeWidth={1.5}
+              strokeWidth={1}
               fill="url(#retentionFill)"
               isAnimationActive={false}
               dot={false}
@@ -75,9 +76,14 @@ export default function RetentionChart({
       </div>
 
       <div className="h-4 flex items-center">
-        <div className="flex-1 h-px bg-[var(--tt-border)] relative">
-          <div className="absolute -top-[7px] left-0 w-3.5 h-3.5 rounded-full bg-white border border-[var(--tt-border)] shadow-sm" />
-        </div>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={scrub}
+          onChange={(e) => setScrub(Number(e.target.value))}
+          className="range-scrub w-full"
+        />
       </div>
 
       <div className="flex items-center justify-between text-[12px] text-[var(--tt-text-secondary)]">
