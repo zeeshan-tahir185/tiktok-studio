@@ -11,6 +11,7 @@ import {
 import Editable from "./Editable";
 
 function formatTick(v, kind) {
+  if (v === 0) return "";
   switch (kind) {
     case "compact":
       return Math.abs(v) >= 1000 ? `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k` : `${v}`;
