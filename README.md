@@ -8,6 +8,13 @@ manually editable and updates instantly.
 
 React + Vite, Tailwind CSS v4, Recharts, React Router.
 
+## Deploying (Vercel)
+
+A `vercel.json` rewrite is included so client-side routes like `/admin` don't
+404 on refresh/direct navigation — it tells Vercel to always serve
+`index.html` and let React Router handle the path. Just push/redeploy after
+pulling this file; no dashboard settings needed.
+
 ## Run locally
 
 ```bash
