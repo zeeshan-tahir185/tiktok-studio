@@ -8,6 +8,16 @@ import RetentionChart from "./RetentionChart";
 import BarRow from "./BarRow";
 import Card from "./Card";
 
+function parseLeadingNumber(text) {
+  const match = String(text).match(/-?[\d.,]+\s*([kKmM]?)/);
+  if (!match) return null;
+  const base = parseFloat(match[0].replace(/[^\d.-]/g, ""));
+  if (Number.isNaN(base)) return null;
+  const suffix = match[1].toLowerCase();
+  const multiplier = suffix === "k" ? 1000 : suffix === "m" ? 1000000 : 1;
+  return base * multiplier;
+}
+
 export default function OverviewTab() {
   const { data, updateField, updateListItem } = useAnalyticsData();
   const o = data.overview;
@@ -30,6 +40,12 @@ export default function OverviewTab() {
           onChangeValue={(key, v) => {
             const i = o.metrics.findIndex((m) => m.key === key);
             updateField(["overview", "metrics", i, "value"], v);
+
+            const numeric = parseLeadingNumber(v);
+            const lastIndex = o.metrics[i].trend.length - 1;
+            if (numeric !== null) {
+              updateField(["overview", "metrics", i, "trend", lastIndex, "value"], numeric);
+            }
           }}
         />
         <div className="px-3 pt-2">

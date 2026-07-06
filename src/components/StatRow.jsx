@@ -14,8 +14,11 @@ export default function StatRow({ metrics, activeKey, onSelect, onChangeValue })
             onClick={() => onSelect(m.key)}
             className={`flex-1 min-w-[150px] text-center px-5 py-4 border-t-[4px] ${
               i > 0 ? "border-l border-l-[var(--tt-border)]" : ""
-            } ${active ? "" : "border-b border-b-[var(--tt-border)]"}`}
-            style={{ borderTopColor: active ? "#0075db" : "transparent" }}
+            } ${
+              active
+                ? "border-t-[#0075db]"
+                : "border-b border-b-[var(--tt-border)] border-t-transparent hover:border-t-[rgba(0,0,0,.17)]"
+            }`}
           >
             <div
               className="mb-1.5 whitespace-nowrap"
