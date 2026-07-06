@@ -33,7 +33,7 @@ export default function Header({ activeTab, onTabChange }) {
 
       <div className="h-full flex items-center gap-3">
         <div style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}>
-          Updated on{" "}
+          Updated on real time{" "}
           <Editable
             value={data.updatedOn}
             onChange={(v) => updateField(["updatedOn"], v)}
