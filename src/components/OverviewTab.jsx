@@ -75,10 +75,11 @@ export default function OverviewTab() {
             duration={o.retention.duration}
             data={o.retention.data}
             onChangeY={(i, v) => updateListItem(["overview", "retention", "data"], i, "pct", v)}
+            thumbnailUrl={data.video.thumbnailUrl}
           />
         </Card>
 
-        <div className="space-y-5">
+        <div className="space-y-3">
           <Card title="Traffic source">
             {o.trafficSource.map((item, i) => (
               <BarRow

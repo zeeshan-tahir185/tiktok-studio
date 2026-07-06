@@ -35,11 +35,8 @@ export default function BarRow({ label, pct, onChangePct, onChangeLabel, chevron
           )}
         </div>
       </div>
-      <div className="h-1.5 rounded-full bg-[var(--tt-track)] overflow-hidden">
-        <div
-          className="h-full rounded-full bg-[var(--tt-accent)]"
-          style={{ width: `${width}%` }}
-        />
+      <div style={{ height: 10, borderRadius: 2, background: "var(--tt-track)", overflow: "hidden" }}>
+        <div style={{ height: "100%", borderRadius: 2, background: "#0075db", width: `${width}%` }} />
       </div>
     </div>
   );

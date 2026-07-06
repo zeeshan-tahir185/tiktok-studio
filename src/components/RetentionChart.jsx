@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { AreaChart, Area, Tooltip, ResponsiveContainer } from "recharts";
+import { AreaChart, Area, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import Editable from "./Editable";
 import VideoPlayPreview from "./VideoPlayPreview";
+
+const CHART_HEIGHT = 50;
+const CHART_MARGIN_TOP = 6;
 
 function CustomDot({ cx, cy, index, value, selectedIndex, onSelect, onChangeY }) {
   if (cx == null || cy == null) return null;
@@ -11,13 +14,21 @@ function CustomDot({ cx, cy, index, value, selectedIndex, onSelect, onChangeY })
       <circle
         cx={cx}
         cy={cy}
-        r={2.5}
-        fill="#fff"
-        stroke="var(--tt-accent)"
-        strokeWidth={1.25}
+        r={6}
+        fill="transparent"
         style={{ cursor: "pointer" }}
         onClick={() => onSelect(index)}
       />
+      {isSelected && (
+        <circle
+          cx={cx}
+          cy={cy}
+          r={2.5}
+          fill="#fff"
+          stroke="var(--tt-accent)"
+          strokeWidth={1.25}
+        />
+      )}
       {isSelected && (
         <foreignObject x={Math.max(0, cx - 20)} y={cy - 28} width={40} height={20}>
           <div xmlns="http://www.w3.org/1999/xhtml" style={{ textAlign: "center" }}>
@@ -41,6 +52,7 @@ export default function RetentionChart({
   duration,
   data,
   onChangeY,
+  thumbnailUrl,
 }) {
   const firstPct = data[0]?.pct ?? 0;
   const [scrub, setScrub] = useState(0);
@@ -59,23 +71,38 @@ export default function RetentionChart({
         {sentence.after}
       </div>
 
-      <VideoPlayPreview />
+      <VideoPlayPreview thumbnailUrl={thumbnailUrl} />
 
       <div className="relative mt-4">
-        <div className="absolute right-0 top-0 text-[11px] text-[var(--tt-text-secondary)]">
+        <div
+          className="absolute left-0 right-9 border-t border-dashed border-[#e5e6e9]"
+          style={{ top: CHART_MARGIN_TOP }}
+        />
+        <div
+          className="absolute left-0 right-9 border-t border-dashed border-[#e5e6e9]"
+          style={{ top: CHART_MARGIN_TOP + (CHART_HEIGHT - CHART_MARGIN_TOP) / 2 }}
+        />
+        <div
+          className="absolute right-0 text-[11px] text-[var(--tt-text-secondary)] -translate-y-1/2"
+          style={{ top: CHART_MARGIN_TOP }}
+        >
           100%
         </div>
-        <div className="absolute right-0 top-1/2 text-[11px] text-[var(--tt-text-secondary)]">
+        <div
+          className="absolute right-0 text-[11px] text-[var(--tt-text-secondary)] -translate-y-1/2"
+          style={{ top: CHART_MARGIN_TOP + (CHART_HEIGHT - CHART_MARGIN_TOP) / 2 }}
+        >
           50%
         </div>
-        <ResponsiveContainer width="100%" height={95}>
-          <AreaChart data={data} margin={{ top: 14, right: 34, left: 0, bottom: 0 }}>
+        <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
+          <AreaChart data={data} margin={{ top: CHART_MARGIN_TOP, right: 34, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="retentionFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--tt-accent)" stopOpacity={0.2} />
                 <stop offset="100%" stopColor="var(--tt-accent)" stopOpacity={0} />
               </linearGradient>
             </defs>
+            <YAxis hide domain={[0, 100]} />
             <Tooltip
               contentStyle={{ fontSize: 11, borderRadius: 8 }}
               cursor={{ stroke: "#ccc", strokeDasharray: "4 4" }}

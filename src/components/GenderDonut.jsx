@@ -1,7 +1,7 @@
 import { PieChart, Pie, Cell } from "recharts";
 import Editable from "./Editable";
 
-const COLORS = ["#1477fc", "#7cb8fd", "#c7dffe"];
+const COLORS = ["rgba(0,117,219,1)", "rgba(0,117,219,0.8)", "rgba(0,117,219,0.6)"];
 
 export default function GenderDonut({ male, female, other, onChange }) {
   const data = [
@@ -11,7 +11,7 @@ export default function GenderDonut({ male, female, other, onChange }) {
   ];
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center justify-center gap-10 px-4 py-6">
       <PieChart width={170} height={100}>
         <Pie
           data={data}
@@ -22,6 +22,7 @@ export default function GenderDonut({ male, female, other, onChange }) {
           cy={95}
           innerRadius={50}
           outerRadius={80}
+          paddingAngle={2}
           stroke="none"
           isAnimationActive={false}
         >
@@ -30,22 +31,22 @@ export default function GenderDonut({ male, female, other, onChange }) {
           ))}
         </Pie>
       </PieChart>
-      <div className="flex-1 space-y-2.5">
+      <div className="space-y-3">
         {data.map((entry, i) => (
           <div key={entry.key} className="flex items-center gap-2 text-[13px]">
             <span
               className="w-2.5 h-2.5 rounded-[2px] shrink-0"
               style={{ background: COLORS[i] }}
             />
-            <span className="text-[var(--tt-text)] flex-1">{entry.label}</span>
+            <span className="text-[var(--tt-text)] w-16">{entry.label}</span>
             <div className="flex items-center gap-0.5 w-12 justify-end">
               <Editable
                 value={entry.value}
                 numeric
                 onChange={(v) => onChange(entry.key, v)}
-                className="font-medium text-[var(--tt-text)]"
+                className="font-semibold text-[var(--tt-text)]"
               />
-              <span className="text-[var(--tt-text-secondary)]">%</span>
+              <span className="font-semibold text-[var(--tt-text)]">%</span>
             </div>
           </div>
         ))}

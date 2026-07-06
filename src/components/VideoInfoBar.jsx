@@ -51,15 +51,24 @@ export default function VideoInfoBar() {
   return (
     <div className="flex items-center justify-between px-5 py-5 border-b border-[var(--tt-border)]">
       <div className="flex items-center gap-3 min-w-0">
-        <div
-          className="shrink-0"
-          style={{
-            width: 42,
-            height: 56,
-            borderRadius: 4,
-            background: "linear-gradient(160deg, #6ea8ff, #2e5fd9)",
-          }}
-        />
+        {v.thumbnailUrl ? (
+          <img
+            src={v.thumbnailUrl}
+            alt=""
+            className="shrink-0 object-cover"
+            style={{ width: 42, height: 56, borderRadius: 4 }}
+          />
+        ) : (
+          <div
+            className="shrink-0"
+            style={{
+              width: 42,
+              height: 56,
+              borderRadius: 4,
+              background: "linear-gradient(160deg, #6ea8ff, #2e5fd9)",
+            }}
+          />
+        )}
         <div className="min-w-0">
           <Editable
             value={v.caption}

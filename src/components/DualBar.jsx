@@ -13,9 +13,9 @@ export default function DualBar({ leftPct, leftLabel, rightLabel, onChangeLeftPc
         </div>
         <div className="text-[14px] font-medium text-[var(--tt-text)]">{right}%</div>
       </div>
-      <div className="h-2 rounded-full overflow-hidden flex bg-[var(--tt-track)]">
-        <div className="h-full bg-[var(--tt-accent)]" style={{ width: `${left}%` }} />
-        <div className="h-full bg-[var(--tt-accent-light)]" style={{ width: `${right}%` }} />
+      <div style={{ height: 10, borderRadius: 2, overflow: "hidden", display: "flex", gap: 2, background: "var(--tt-track)" }}>
+        <div style={{ height: "100%", borderRadius: 2, background: "#0075db", width: `${left}%` }} />
+        <div style={{ height: "100%", borderRadius: 2, background: "var(--tt-accent-light)", width: `${right}%` }} />
       </div>
       <div className="flex items-center justify-between mt-1.5 text-[13px] text-[var(--tt-text)]">
         <span>{leftLabel}</span>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { initialData } from "./sampleData";
+import { getUploadedVideos, addUploadedVideo as persistUploadedVideo } from "./videoStore";
 
 const DataContext = createContext(null);
 
@@ -19,6 +20,10 @@ function setPath(obj, path, value) {
 
 export function DataProvider({ children }) {
   const [data, setData] = useState(initialData);
+  const [uploadedVideos, setUploadedVideos] = useState(() => getUploadedVideos());
+  const [activeVideoId, setActiveVideoId] = useState(
+    () => uploadedVideos[0]?.id ?? initialData.sidebarVideos.find((v) => v.active)?.id
+  );
 
   const updateField = (path, value) => {
     setData((prev) => setPath(prev, path, value));
@@ -35,9 +40,60 @@ export function DataProvider({ children }) {
     });
   };
 
+  const sidebarList = useMemo(
+    () => [
+      ...uploadedVideos.map((v) => ({
+        id: v.id,
+        title: v.title,
+        thumbnailUrl: v.thumbnailUrl,
+        active: v.id === activeVideoId,
+      })),
+      ...data.sidebarVideos.map((v) => ({
+        ...v,
+        active: v.id === activeVideoId,
+      })),
+    ],
+    [uploadedVideos, data.sidebarVideos, activeVideoId]
+  );
+
+  const selectVideo = (id) => {
+    setActiveVideoId(id);
+    const found = sidebarList.find((v) => v.id === id);
+    if (!found) return;
+    setData((prev) =>
+      setPath(
+        setPath(prev, ["video", "caption"], found.title),
+        ["video", "thumbnailUrl"],
+        found.thumbnailUrl ?? null
+      )
+    );
+  };
+
+  const addUploadedVideo = (title, thumbnailUrl) => {
+    const entry = persistUploadedVideo({ title, thumbnailUrl });
+    setUploadedVideos((prev) => [entry, ...prev]);
+    setActiveVideoId(entry.id);
+    setData((prev) =>
+      setPath(
+        setPath(prev, ["video", "caption"], entry.title),
+        ["video", "thumbnailUrl"],
+        entry.thumbnailUrl
+      )
+    );
+    return entry;
+  };
+
   const value = useMemo(
-    () => ({ data, updateField, updateListItem }),
-    [data]
+    () => ({
+      data,
+      updateField,
+      updateListItem,
+      sidebarList,
+      activeVideoId,
+      selectVideo,
+      addUploadedVideo,
+    }),
+    [data, sidebarList, activeVideoId]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

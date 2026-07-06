@@ -62,11 +62,22 @@ button {
 .range-scrub {
   -webkit-appearance: none;
   appearance: none;
-  height: 1px;
-  background: var(--tt-border);
-  border-radius: 999px;
+  height: 14px;
+  background: transparent;
   outline: none;
   cursor: pointer;
+}
+
+.range-scrub::-webkit-slider-runnable-track {
+  height: 3px;
+  background: #d2d3d6;
+  border-radius: 999px;
+}
+
+.range-scrub::-moz-range-progress {
+  height: 3px;
+  background: #d2d3d6;
+  border-radius: 999px;
 }
 
 .range-scrub::-webkit-slider-thumb {
@@ -79,6 +90,7 @@ button {
   border: 1px solid var(--tt-border);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   cursor: pointer;
+  margin-top: -5.5px;
 }
 
 .range-scrub::-moz-range-thumb {

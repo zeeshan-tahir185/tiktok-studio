@@ -9,6 +9,7 @@ export const initialData = {
   video: {
     caption: "#solutionsinnov8 #tiktokstudio #frontend #saas #buildinpublic",
     postedDate: "Posted on 7/3/2026",
+    thumbnailUrl: null,
     stats: { plays: "39K", likes: "587", comments: "12", shares: "6", bookmarks: "9" },
   },
   sidebarVideos: [

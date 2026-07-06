@@ -10,9 +10,9 @@ export default function ViewersTab() {
   const v = data.viewers;
 
   return (
-    <div className="px-6 py-6 grid grid-cols-1 lg:grid-cols-2 gap-5">
-      <div className="space-y-5">
-        <Card title="Total viewers">
+    <div className="px-8 py-8 grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div className="space-y-3">
+        <Card title="Total viewers" divider={false}>
           <Editable
             value={v.total.value}
             onChange={(val) => updateField(["viewers", "total", "value"], val)}
@@ -70,7 +70,7 @@ export default function ViewersTab() {
         </Card>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-3">
         <Card title="Gender">
           <GenderDonut
             male={v.gender.malePct}

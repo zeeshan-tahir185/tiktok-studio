@@ -1,6 +1,16 @@
 import { useAnalyticsData } from "../data/DataContext";
 
-function VideoThumb({ hue }) {
+function VideoThumb({ hue, thumbnailUrl }) {
+  if (thumbnailUrl) {
+    return (
+      <img
+        src={thumbnailUrl}
+        alt=""
+        className="shrink-0 object-cover"
+        style={{ width: 42, height: 56, borderRadius: 4 }}
+      />
+    );
+  }
   return (
     <div
       className="shrink-0"
@@ -15,7 +25,7 @@ function VideoThumb({ hue }) {
 }
 
 export default function Sidebar() {
-  const { data } = useAnalyticsData();
+  const { sidebarList, selectVideo } = useAnalyticsData();
 
   return (
     <aside className="w-[250px] shrink-0 border-r border-[var(--tt-border)] bg-[var(--tt-sidebar-bg)] flex flex-col h-screen sticky top-0">
@@ -39,13 +49,14 @@ export default function Sidebar() {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pt-5 scrollbar-hide">
-        {data.sidebarVideos.map((v) => (
+        {sidebarList.map((v) => (
           <div
             key={v.id}
+            onClick={() => selectVideo(v.id)}
             className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-[#f5f5f6]"
             style={v.active ? { background: "rgba(0,0,0,0.05)" } : undefined}
           >
-            <VideoThumb hue={v.hue} />
+            <VideoThumb hue={v.hue} thumbnailUrl={v.thumbnailUrl} />
             <div className="min-w-0 flex-1 text-[13.5px] text-[var(--tt-text)] leading-snug line-clamp-2">
               {v.title}
             </div>

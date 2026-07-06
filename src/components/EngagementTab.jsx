@@ -9,7 +9,7 @@ export default function EngagementTab() {
   const e = data.engagement;
 
   return (
-    <div className="px-6 py-6 grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+    <div className="px-8 py-8 grid grid-cols-1 lg:grid-cols-2 gap-3 items-start">
       <Card title="Likes">
         <RetentionChart
           sentence={{ before: "Most viewers liked this video at", after: ". Play the video below to see when they liked it." }}
@@ -18,6 +18,7 @@ export default function EngagementTab() {
           duration={e.likes.duration}
           data={e.likes.data}
           onChangeY={(i, v) => updateListItem(["engagement", "likes", "data"], i, "pct", v)}
+          thumbnailUrl={data.video.thumbnailUrl}
         />
       </Card>
 
