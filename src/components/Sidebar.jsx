@@ -20,7 +20,7 @@ export default function Sidebar() {
   return (
     <aside className="w-[250px] shrink-0 border-r border-[var(--tt-border)] bg-[var(--tt-sidebar-bg)] flex flex-col h-screen sticky top-0">
       <div className="h-16 flex items-center px-6 border-b border-[var(--tt-border)]">
-        <img src="/tiktok-studio-logo.png" alt="TikTok Studio" className="h-[30px] w-auto" />
+        <img src="/tiktok-studio-logo.png" alt="TikTok Studio" className="h-[28px] w-auto" />
       </div>
 
       <div className="px-6 py-5 border-b border-[var(--tt-border)]">
@@ -38,11 +38,11 @@ export default function Sidebar() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 pt-5 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto px-4 pt-5 scrollbar-hide">
         {data.sidebarVideos.map((v) => (
           <div
             key={v.id}
-            className="flex items-center gap-3 px-2 py-2 rounded-lg cursor-pointer hover:bg-[#f5f5f6]"
+            className="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer hover:bg-[#f5f5f6]"
             style={v.active ? { background: "rgba(0,0,0,0.05)" } : undefined}
           >
             <VideoThumb hue={v.hue} />

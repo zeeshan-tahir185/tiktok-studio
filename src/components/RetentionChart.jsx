@@ -1,22 +1,36 @@
 import { useState } from "react";
-import { AreaChart, Area, ResponsiveContainer } from "recharts";
+import { AreaChart, Area, Tooltip, ResponsiveContainer } from "recharts";
 import Editable from "./Editable";
 import VideoPlayPreview from "./VideoPlayPreview";
 
-function EditablePoint({ x, y, value, index, onChangeY }) {
-  if (x == null || y == null) return null;
-  const boxX = Math.max(0, x - 18);
+function CustomDot({ cx, cy, index, value, selectedIndex, onSelect, onChangeY }) {
+  if (cx == null || cy == null) return null;
+  const isSelected = index === selectedIndex;
   return (
-    <foreignObject x={boxX} y={y - 22} width={36} height={18}>
-      <div xmlns="http://www.w3.org/1999/xhtml" style={{ textAlign: "center" }}>
-        <Editable
-          value={value}
-          numeric
-          onChange={(v) => onChangeY(index, v)}
-          className="inline-block text-[10px] text-[var(--tt-accent-dark)] font-medium px-0.5 rounded"
-        />
-      </div>
-    </foreignObject>
+    <g>
+      <circle
+        cx={cx}
+        cy={cy}
+        r={2.5}
+        fill="#fff"
+        stroke="var(--tt-accent)"
+        strokeWidth={1.25}
+        style={{ cursor: "pointer" }}
+        onClick={() => onSelect(index)}
+      />
+      {isSelected && (
+        <foreignObject x={Math.max(0, cx - 20)} y={cy - 28} width={40} height={20}>
+          <div xmlns="http://www.w3.org/1999/xhtml" style={{ textAlign: "center" }}>
+            <Editable
+              value={value}
+              numeric
+              onChange={(v) => onChangeY(index, v)}
+              className="inline-block text-[10px] bg-white border border-[var(--tt-border)] rounded px-1 shadow-sm text-[var(--tt-accent-dark)] font-medium"
+            />
+          </div>
+        </foreignObject>
+      )}
+    </g>
   );
 }
 
@@ -30,6 +44,7 @@ export default function RetentionChart({
 }) {
   const firstPct = data[0]?.pct ?? 0;
   const [scrub, setScrub] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   return (
     <div>
@@ -61,15 +76,25 @@ export default function RetentionChart({
                 <stop offset="100%" stopColor="var(--tt-accent)" stopOpacity={0} />
               </linearGradient>
             </defs>
+            <Tooltip
+              contentStyle={{ fontSize: 11, borderRadius: 8 }}
+              cursor={{ stroke: "#ccc", strokeDasharray: "4 4" }}
+            />
             <Area
-              type="monotone"
+              type="linear"
               dataKey="pct"
               stroke="var(--tt-accent)"
               strokeWidth={1}
               fill="url(#retentionFill)"
               isAnimationActive={false}
-              dot={false}
-              label={(props) => <EditablePoint {...props} onChangeY={onChangeY} />}
+              dot={(props) => (
+                <CustomDot
+                  {...props}
+                  selectedIndex={selectedIndex}
+                  onSelect={setSelectedIndex}
+                  onChangeY={onChangeY}
+                />
+              )}
             />
           </AreaChart>
         </ResponsiveContainer>

@@ -21,7 +21,7 @@ export default function StatRow({ metrics, activeKey, onSelect, onChangeValue })
             }`}
           >
             <div
-              className="mb-1.5 whitespace-nowrap"
+              className="mb-1 whitespace-nowrap"
               style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "#000" }}
             >
               {m.label}

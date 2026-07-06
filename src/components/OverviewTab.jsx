@@ -27,12 +27,12 @@ export default function OverviewTab() {
   const active = o.metrics[activeIndex];
 
   return (
-    <div className="px-6 py-6 space-y-5">
-      <div className="rounded-xl border border-[var(--tt-border)] bg-white">
+    <div className="px-8 py-8 space-y-3 bg-[#FAF9FA]">
+      <div className="rounded-lg border border-[var(--tt-border)] bg-white">
         <VideoInfoBar />
       </div>
 
-      <div className="rounded-xl border border-[var(--tt-border)] bg-white overflow-hidden">
+      <div className="rounded-lg border border-[var(--tt-border)] bg-white overflow-hidden">
         <StatRow
           metrics={o.metrics}
           activeKey={activeKey}

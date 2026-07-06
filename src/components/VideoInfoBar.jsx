@@ -49,7 +49,7 @@ export default function VideoInfoBar() {
   ];
 
   return (
-    <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--tt-border)]">
+    <div className="flex items-center justify-between px-5 py-5 border-b border-[var(--tt-border)]">
       <div className="flex items-center gap-3 min-w-0">
         <div
           className="shrink-0"
@@ -76,7 +76,10 @@ export default function VideoInfoBar() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-end gap-10" style={{ color: "rgba(0,0,0,.25)" }}>
+      <div
+        className="flex-1 flex items-center justify-end gap-12 mr-2"
+        style={{ color: "rgba(0,0,0,.25)", fontSize: 22 }}
+      >
         {statFields.map(([key, icon]) => (
           <div key={key} className="flex flex-col items-center gap-1">
             <span>{ICONS[icon]}</span>
@@ -84,7 +87,7 @@ export default function VideoInfoBar() {
               value={v.stats[key]}
               onChange={(val) => updateField(["video", "stats", key], val)}
               className="block"
-              style={{ fontFamily: TT_FONT, fontSize: 13, color: "rgba(0,0,0,.25)" }}
+              style={{ fontFamily: TT_FONT, fontSize: 13, fontWeight: 500, color: "rgba(0,0,0,.48)" }}
             />
           </div>
         ))}

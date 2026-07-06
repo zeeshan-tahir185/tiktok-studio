@@ -10,7 +10,7 @@ export default function Header({ activeTab, onTabChange }) {
   const { data, updateField } = useAnalyticsData();
 
   return (
-    <div className="sticky top-0 bg-white z-10 flex justify-between px-6 h-16 border-b border-[var(--tt-border)]">
+    <div className="sticky top-0 bg-white z-10 flex justify-between px-[32px] h-16 border-b border-[var(--tt-border)]">
       <div className="h-full flex items-center gap-6">
         {TABS.map((tab) => (
           <button
