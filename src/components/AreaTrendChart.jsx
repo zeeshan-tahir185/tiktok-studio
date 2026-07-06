@@ -1,14 +1,8 @@
 import { useState } from "react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, CartesianGrid } from "recharts";
 import Editable from "./Editable";
+
+const CHART_HEIGHT = 220;
 
 function formatTick(v, kind) {
   if (v === 0) return "";
@@ -26,11 +20,26 @@ function formatTick(v, kind) {
   }
 }
 
-function CustomDot({ cx, cy, index, value, selectedIndex, onSelect, onChangeY }) {
+function CustomDot({ cx, cy, index, value, payload, selectedIndex, onSelect, onChangeY }) {
   if (cx == null || cy == null) return null;
   const isSelected = index === selectedIndex;
+  const scalarValue = Array.isArray(value) ? value[1] : value;
+  const boxX = Math.max(4, cx - 44);
+  const boxY = Math.max(4, cy - 76);
+
   return (
     <g>
+      {isSelected && (
+        <line x1={cx} y1={0} x2={cx} y2={CHART_HEIGHT} stroke="#ccc" strokeDasharray="4 4" />
+      )}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={14}
+        fill="rgba(0,0,0,0.001)"
+        style={{ cursor: "pointer", pointerEvents: "all" }}
+        onClick={() => onSelect(index)}
+      />
       <circle
         cx={cx}
         cy={cy}
@@ -38,18 +47,24 @@ function CustomDot({ cx, cy, index, value, selectedIndex, onSelect, onChangeY })
         fill="#fff"
         stroke="var(--tt-accent)"
         strokeWidth={1.5}
-        style={{ cursor: "pointer" }}
-        onClick={() => onSelect(index)}
+        style={{ pointerEvents: "none" }}
       />
       {isSelected && (
-        <foreignObject x={Math.max(0, cx - 24)} y={cy - 32} width={48} height={22}>
-          <div xmlns="http://www.w3.org/1999/xhtml" style={{ textAlign: "center" }}>
-            <Editable
-              value={value}
-              numeric
-              onChange={(v) => onChangeY(index, v)}
-              className="inline-block text-[11px] bg-white border border-[var(--tt-border)] rounded px-1 shadow-sm text-[var(--tt-accent-dark)] font-medium"
-            />
+        <foreignObject x={boxX} y={boxY} width={90} height={58}>
+          <div
+            xmlns="http://www.w3.org/1999/xhtml"
+            className="bg-white border border-[var(--tt-border)] rounded-lg shadow-md px-3 py-2"
+          >
+            <div className="text-[12px] text-[var(--tt-text-secondary)]">{payload.date}</div>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--tt-accent)] shrink-0" />
+              <Editable
+                value={scalarValue}
+                numeric
+                onChange={(v) => onChangeY(index, v)}
+                className="text-[15px] font-semibold text-black"
+              />
+            </div>
           </div>
         </foreignObject>
       )}
@@ -61,7 +76,7 @@ export default function AreaTrendChart({ data, onChangeY, yTickFormatter = "plai
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
+    <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
       <AreaChart data={data} margin={{ top: 26, right: 10, left: 8, bottom: 6 }}>
         <defs>
           <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
@@ -85,10 +100,6 @@ export default function AreaTrendChart({ data, onChangeY, yTickFormatter = "plai
           width={44}
           tickFormatter={(v) => formatTick(v, yTickFormatter)}
         />
-        <Tooltip
-          contentStyle={{ fontSize: 12, borderRadius: 8 }}
-          cursor={{ stroke: "#ccc", strokeDasharray: "4 4" }}
-        />
         <Area
           type="linear"
           dataKey="value"
@@ -104,7 +115,6 @@ export default function AreaTrendChart({ data, onChangeY, yTickFormatter = "plai
               onChangeY={onChangeY}
             />
           )}
-          activeDot={{ r: 5 }}
         />
       </AreaChart>
     </ResponsiveContainer>

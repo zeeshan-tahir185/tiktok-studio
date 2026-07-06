@@ -11,17 +11,17 @@ export default function GenderDonut({ male, female, other, onChange }) {
   ];
 
   return (
-    <div className="flex items-center justify-center gap-10 px-4 py-6">
-      <PieChart width={170} height={100}>
+    <div className="flex items-center justify-center gap-28 py-4">
+      <PieChart width={190} height={110}>
         <Pie
           data={data}
           dataKey="value"
           startAngle={180}
           endAngle={0}
-          cx={85}
-          cy={95}
-          innerRadius={50}
-          outerRadius={80}
+          cx={95}
+          cy={105}
+          innerRadius={48}
+          outerRadius={90}
           paddingAngle={2}
           stroke="none"
           isAnimationActive={false}
@@ -39,7 +39,7 @@ export default function GenderDonut({ male, female, other, onChange }) {
               style={{ background: COLORS[i] }}
             />
             <span className="text-[var(--tt-text)] w-16">{entry.label}</span>
-            <div className="flex items-center gap-0.5 w-12 justify-end">
+            <div className="flex items-center w-12 justify-end">
               <Editable
                 value={entry.value}
                 numeric
