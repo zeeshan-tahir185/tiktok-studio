@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+  --tt-accent: #1477fc;
+  --tt-accent-light: #9cc9fb;
+  --tt-accent-dark: #0e5fd6;
+  --tt-accent-fill: rgba(20, 119, 252, 0.12);
+  --tt-text: #161823;
+  --tt-text-secondary: #767a82;
+  --tt-border: #e5e6e9;
+  --tt-track: #eef0f2;
+  --tt-bg: #fafafb;
+  --tt-sidebar-bg: #ffffff;
+  --tt-note-bg: #f4f5f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    "TikTokFont",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Ubuntu,
+    Cantarell,
+    "Noto Sans",
+    sans-serif,
+    "Roboto",
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+  color: var(--tt-text);
+  background: var(--tt-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+[contenteditable] {
+  outline: none;
+}
+
+[contenteditable]:hover {
+  background: rgba(105, 180, 255, 0.08);
+  border-radius: 4px;
+  cursor: text;
+}
+
+[contenteditable]:focus {
+  background: rgba(105, 180, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d8d9dc;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
