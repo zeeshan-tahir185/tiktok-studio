@@ -3,6 +3,9 @@ import Editable from "./Editable";
 
 const TABS = ["Overview", "Viewers", "Engagement"];
 
+const TT_FONT =
+  '"TikTokFont",system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif,"Roboto","Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
+
 export default function Header({ activeTab, onTabChange }) {
   const { data, updateField } = useAnalyticsData();
 
@@ -29,12 +32,12 @@ export default function Header({ activeTab, onTabChange }) {
       </div>
 
       <div className="h-full flex items-center gap-3">
-        <div className="text-[13px] text-[var(--tt-text-secondary)]">
+        <div style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}>
           Updated on{" "}
           <Editable
             value={data.updatedOn}
             onChange={(v) => updateField(["updatedOn"], v)}
-            className="text-[var(--tt-text-secondary)]"
+            style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}
           />
           .
         </div>
