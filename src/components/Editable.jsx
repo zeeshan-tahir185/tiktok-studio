@@ -21,6 +21,18 @@ export default function Editable({
     }
   }, [value]);
 
+  const handleInput = () => {
+    if (!ref.current) return;
+    const raw = ref.current.textContent;
+    if (numeric) {
+      const cleaned = raw.replace(/[^0-9.\-]/g, "");
+      const num = parseFloat(cleaned);
+      if (!Number.isNaN(num)) onChange(num);
+    } else {
+      onChange(raw);
+    }
+  };
+
   const handleBlur = () => {
     focused.current = false;
     const raw = ref.current.textContent.trim();
@@ -53,6 +65,7 @@ export default function Editable({
       spellCheck={false}
       onFocus={() => (focused.current = true)}
       onBlur={handleBlur}
+      onInput={handleInput}
       onKeyDown={handleKeyDown}
       className={className}
       style={style}
