@@ -11,7 +11,7 @@ export default function GenderDonut({ male, female, other, onChange }) {
   ];
 
   return (
-    <div className="flex items-center justify-center gap-28 py-4">
+    <div className="flex items-center justify-between px-8 py-4">
       <PieChart width={190} height={110}>
         <Pie
           data={data}

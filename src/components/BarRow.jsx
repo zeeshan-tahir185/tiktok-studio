@@ -31,7 +31,7 @@ export default function BarRow({ label, pct, onChangePct, onChangeLabel, chevron
             numeric
             className="text-[13px] text-[var(--tt-text)] font-medium"
           />
-          <span className="text-[13px] text-[var(--tt-text-secondary)]">%</span>
+          <span className="text-[13px] text-[var(--tt-text)] font-medium">%</span>
           {chevron && (
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="ml-0.5">
               <path
