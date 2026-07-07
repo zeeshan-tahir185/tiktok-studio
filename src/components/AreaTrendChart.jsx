@@ -13,12 +13,6 @@ import Editable from "./Editable";
 const CHART_HEIGHT = 220;
 const TICK_PROPORTIONS = [0, 0.25, 0.5, 0.75, 1];
 
-function pickIndices(data) {
-  if (data.length <= 3) return data.map((_, i) => i);
-  const mid = Math.floor((data.length - 1) / 2);
-  return [0, mid, data.length - 1];
-}
-
 function niceMax(max) {
   if (max <= 0) return 1;
   const mag = Math.pow(10, Math.floor(Math.log10(max)));
@@ -69,9 +63,9 @@ function TooltipCapture({ active, payload, label, chartData, onActive }) {
   return null;
 }
 
-// Captures the ACTUAL rendered cx/cy of each of the 3 dots — this is the
-// one source of truth for on-screen position, tied to the real data value
-// (not the mouse), so the tooltip box anchors exactly above the point.
+// Captures the ACTUAL rendered cx/cy of each dot — this is the one source
+// of truth for on-screen position, tied to the real data value (not the
+// mouse), so the tooltip box anchors exactly above the point.
 function CapturingDot({ cx, cy, index, onPosition }) {
   useEffect(() => {
     if (cx != null && cy != null) onPosition(index, { x: cx, y: cy });
@@ -80,28 +74,44 @@ function CapturingDot({ cx, cy, index, onPosition }) {
   return <circle cx={cx} cy={cy} r={3} fill="#fff" stroke="var(--tt-accent)" strokeWidth={1.5} />;
 }
 
-function EditableXTick({ x, y, payload, index, lastIndex, onChangeDate }) {
-  const width = 74;
+function EditableXTick({ x, y, payload, index, lastIndex, canRemove, onChangeDate, onRemoveDate }) {
+  const width = 84;
   let boxX = x - width / 2;
   let align = "center";
+  let justify = "center";
   if (index === 0) {
     boxX = x;
     align = "left";
+    justify = "flex-start";
   } else if (index === lastIndex) {
     boxX = x - width;
     align = "right";
+    justify = "flex-end";
   }
   return (
     <foreignObject x={Math.round(boxX)} y={Math.round(y + 4)} width={width} height={20}>
       <div
         xmlns="http://www.w3.org/1999/xhtml"
-        style={{ textAlign: align, whiteSpace: "nowrap", lineHeight: "16px" }}
+        className="group"
+        style={{ display: "flex", justifyContent: justify, alignItems: "center", gap: 3 }}
       >
-        <Editable
-          value={payload.value}
-          onChange={(v) => onChangeDate(index, v)}
-          className="text-[11px] text-[var(--tt-text-secondary)] inline-block"
-        />
+        <div style={{ textAlign: align, whiteSpace: "nowrap" }}>
+          <Editable
+            value={payload.value}
+            onChange={(v) => onChangeDate(index, v)}
+            className="text-[11px] text-[var(--tt-text-secondary)] inline-block"
+          />
+        </div>
+        {canRemove && (
+          <button
+            onClick={() => onRemoveDate(index)}
+            className="opacity-0 group-hover:opacity-100 text-[10px] leading-none text-[var(--tt-text-secondary)] hover:text-red-500 shrink-0"
+            style={{ width: 10, height: 10 }}
+            title="Remove this date"
+          >
+            ×
+          </button>
+        )}
       </div>
     </foreignObject>
   );
@@ -135,17 +145,18 @@ export default function AreaTrendChart({
   data,
   onChangeY,
   onChangeDate,
+  onAddDate,
+  onRemoveDate,
   yAxisMax,
   onChangeYAxisMax,
   yTickFormatter = "plain",
 }) {
-  const [activeLocalIndex, setActiveLocalIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
   const [positions, setPositions] = useState({});
 
-  // Only 3 real nodes exist on this chart — matching the 3 dates shown —
-  // so there is nothing hidden left to hover/tooltip on.
-  const tickIndices = pickIndices(data);
-  const chartData = tickIndices.map((i) => data[i]);
+  // The chart plots exactly the points in `data` — however many the user
+  // has added/removed — so nodes always match the visible date count 1:1.
+  const chartData = data;
 
   // Fall back to an auto "nice" max only if the metric has no stored
   // yAxisMax yet (e.g. older saved data) — once set, it's the sole source
@@ -161,12 +172,10 @@ export default function AreaTrendChart({
     });
   };
 
-  const pinnedOriginalIndex =
-    activeLocalIndex != null ? tickIndices[activeLocalIndex] : null;
-  const pinnedPos = activeLocalIndex != null ? positions[activeLocalIndex] : null;
+  const pinnedPos = activeIndex != null ? positions[activeIndex] : null;
 
   return (
-    <div className="relative" onMouseLeave={() => setActiveLocalIndex(null)}>
+    <div className="relative group/chart" onMouseLeave={() => setActiveIndex(null)}>
       <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
         <AreaChart data={chartData} margin={{ top: 26, right: 10, left: 8, bottom: 10 }}>
           <defs>
@@ -188,7 +197,9 @@ export default function AreaTrendChart({
               <EditableXTick
                 {...props}
                 lastIndex={chartData.length - 1}
-                onChangeDate={(i, v) => onChangeDate(tickIndices[i], v)}
+                canRemove={chartData.length > 2}
+                onChangeDate={onChangeDate}
+                onRemoveDate={onRemoveDate}
               />
             )}
             axisLine={{ stroke: "#eee" }}
@@ -213,7 +224,7 @@ export default function AreaTrendChart({
           />
           <Tooltip
             content={(props) => (
-              <TooltipCapture {...props} chartData={chartData} onActive={setActiveLocalIndex} />
+              <TooltipCapture {...props} chartData={chartData} onActive={setActiveIndex} />
             )}
             cursor={{ stroke: "#ccc", strokeDasharray: "4 4" }}
             isAnimationActive={false}
@@ -231,6 +242,15 @@ export default function AreaTrendChart({
         </AreaChart>
       </ResponsiveContainer>
 
+      <button
+        onClick={onAddDate}
+        title="Add a date"
+        className="absolute bottom-0 right-0 opacity-0 group-hover/chart:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+        style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+      >
+        +
+      </button>
+
       {pinnedPos && (
         <div
           className="absolute z-10"
@@ -238,23 +258,23 @@ export default function AreaTrendChart({
             left: pinnedPos.x,
             top: pinnedPos.y,
             transform:
-              activeLocalIndex === 0
+              activeIndex === 0
                 ? "translate(0%, calc(-100% - 10px))"
-                : activeLocalIndex === chartData.length - 1
+                : activeIndex === chartData.length - 1
                 ? "translate(-100%, calc(-100% - 10px))"
                 : "translate(-50%, calc(-100% - 10px))",
           }}
         >
           <div className="bg-white border border-[var(--tt-border)] rounded-lg shadow-md px-3 py-2 text-center">
             <div className="text-[12px] text-[var(--tt-text-secondary)]">
-              {data[pinnedOriginalIndex].date}
+              {data[activeIndex].date}
             </div>
             <div className="flex items-center justify-center gap-1.5 mt-0.5">
               <span className="w-2 h-2 rounded-full border-[1.5px] border-[var(--tt-accent)] bg-white shrink-0" />
               <Editable
-                value={data[pinnedOriginalIndex].value}
+                value={data[activeIndex].value}
                 numeric
-                onChange={(v) => onChangeY(pinnedOriginalIndex, v)}
+                onChange={(v) => onChangeY(activeIndex, v)}
                 className="text-[15px] font-semibold text-black"
               />
             </div>

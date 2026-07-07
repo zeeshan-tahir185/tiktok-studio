@@ -1,7 +1,5 @@
-const DATES = ["Jun 30", "Jul 1", "Jul 2", "Jul 3", "Jul 4", "Jul 5", "Jul 6"];
-
-function trend(values) {
-  return DATES.map((date, i) => ({ date, value: values[i] }));
+function trend(dates, values) {
+  return dates.map((date, i) => ({ date, value: values[i] }));
 }
 
 export const initialData = {
@@ -31,7 +29,7 @@ export const initialData = {
         key: "views",
         label: "Video views",
         value: "39K",
-        trend: trend([18200, 27400, 32100, 35600, 37300, 38400, 39000]),
+        trend: trend(["Jun 30", "Jul 3", "Jul 6"], [18200, 35600, 39000]),
         yTickFormatter: "compact",
         yAxisMax: 40000,
       },
@@ -39,7 +37,7 @@ export const initialData = {
         key: "playTime",
         label: "Total play time",
         value: "8h 38m 38s",
-        trend: trend([0.4, 0.9, 1.8, 3.0, 3.33, 3.2, 3.1]),
+        trend: trend(["Jun 30", "Jul 3", "Jul 6"], [0.4, 3.0, 3.1]),
         yTickFormatter: "hours",
         yAxisMax: 4,
       },
@@ -47,7 +45,7 @@ export const initialData = {
         key: "watchTime",
         label: "Average watch time",
         value: "0.69s",
-        trend: trend([6.1, 6.0, 6.4, 8.0, 4.1, 2.0, 0.69]),
+        trend: trend(["Jun 30", "Jul 3", "Jul 6"], [6.1, 8.0, 0.69]),
         yTickFormatter: "seconds",
         yAxisMax: 8,
       },
@@ -55,7 +53,7 @@ export const initialData = {
         key: "fullVideo",
         label: "Watched full video",
         value: "0.1%",
-        trend: trend([0.3, 0.25, 0.2, 0.15, 0.12, 0.1, 0.1]),
+        trend: trend(["Jun 30", "Jul 3", "Jul 6"], [0.3, 0.15, 0.1]),
         yTickFormatter: "percent",
         yAxisMax: 0.4,
       },
@@ -63,7 +61,7 @@ export const initialData = {
         key: "newFollowers",
         label: "New followers",
         value: "3",
-        trend: trend([0, 0, 0, 1, 0, 1, 1]),
+        trend: trend(["Jun 30", "Jul 3", "Jul 6"], [0, 1, 1]),
         yTickFormatter: "plain",
         yAxisMax: 4,
       },

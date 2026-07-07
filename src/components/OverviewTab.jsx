@@ -68,6 +68,20 @@ export default function OverviewTab() {
             onChangeYAxisMax={(v) =>
               updateField(["overview", "metrics", activeIndex, "yAxisMax"], v)
             }
+            onAddDate={() => {
+              const lastPoint = active.trend[active.trend.length - 1];
+              updateField(["overview", "metrics", activeIndex, "trend"], [
+                ...active.trend,
+                { date: "New", value: lastPoint?.value ?? 0 },
+              ]);
+            }}
+            onRemoveDate={(pointIndex) => {
+              if (active.trend.length <= 2) return;
+              updateField(
+                ["overview", "metrics", activeIndex, "trend"],
+                active.trend.filter((_, i) => i !== pointIndex)
+              );
+            }}
           />
         </div>
         {/* <NoteBar
