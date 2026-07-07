@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAnalyticsData } from "../data/DataContext";
 import BarRow from "./BarRow";
 import DualBar from "./DualBar";
@@ -5,56 +6,98 @@ import GenderDonut from "./GenderDonut";
 import Editable from "./Editable";
 import Card from "./Card";
 
+const EMPTY_NOTE = "You'll be able to see this information once there's enough data for analysis.";
+
 export default function ViewersTab() {
   const { data, updateField, updateListItem } = useAnalyticsData();
   const v = data.viewers;
+  const [previewEmpty, setPreviewEmpty] = useState(false);
 
   return (
     <div className="px-8 py-8 grid grid-cols-1 lg:grid-cols-2 gap-3">
       <div className="space-y-3">
-        <Card title="Total viewers" divider={false}>
-          <Editable
-            value={v.total.value}
-            onChange={(val) => updateField(["viewers", "total", "value"], val)}
-            className="text-[30px] font-semibold text-[var(--tt-text)] leading-none block"
-          />
-          <div className="flex items-center gap-1.5 mt-2.5">
-            <span className="w-4 h-4 rounded-full bg-[var(--tt-accent)] flex items-center justify-center shrink-0">
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 19V5M6 11l6-6 6 6"
-                  stroke="white"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+        <div className="relative">
+          <Card title="Total viewers" divider={false}>
+            {previewEmpty ? (
+              <>
+                <div className="text-[13px] text-[var(--tt-text-secondary)]">{EMPTY_NOTE}</div>
+                <div className="text-[30px] font-semibold text-[var(--tt-text)] leading-none block mt-2.5">
+                  --
+                </div>
+              </>
+            ) : (
+              <>
+                <Editable
+                  value={v.total.value}
+                  onChange={(val) => updateField(["viewers", "total", "value"], val)}
+                  className="text-[30px] font-semibold text-[var(--tt-text)] leading-none block"
                 />
-              </svg>
-            </span>
-            <Editable
-              value={v.total.changeValue}
-              onChange={(val) => updateField(["viewers", "total", "changeValue"], val)}
-              className="text-[13px] font-medium text-[var(--tt-accent)]"
-            />
-            <Editable
-              value={v.total.changeLabel}
-              onChange={(val) => updateField(["viewers", "total", "changeLabel"], val)}
-              className="text-[13px] text-[var(--tt-text-secondary)]"
-            />
+                <div className="flex items-center gap-1.5 mt-2.5">
+                  <span className="w-4 h-4 rounded-full bg-[var(--tt-accent)] flex items-center justify-center shrink-0">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 19V5M6 11l6-6 6 6"
+                        stroke="white"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <Editable
+                    value={v.total.changeValue}
+                    onChange={(val) => updateField(["viewers", "total", "changeValue"], val)}
+                    className="text-[13px] font-medium text-[var(--tt-accent)]"
+                  />
+                  <Editable
+                    value={v.total.changeLabel}
+                    onChange={(val) => updateField(["viewers", "total", "changeLabel"], val)}
+                    className="text-[13px] text-[var(--tt-text-secondary)]"
+                  />
+                </div>
+              </>
+            )}
+          </Card>
+
+          <div
+            className="absolute top-4 right-4 group/emptyToggle flex items-center justify-end"
+            style={{ width: 40, height: 24 }}
+          >
+            <button
+              onClick={() => setPreviewEmpty((s) => !s)}
+              title={
+                previewEmpty
+                  ? "Showing new-video (empty) preview — click to restore sample data"
+                  : "Preview the new-video (not-enough-data) empty state"
+              }
+              className="relative rounded-full opacity-0 group-hover/emptyToggle:opacity-100 transition-colors shrink-0"
+              style={{ width: 30, height: 16, background: previewEmpty ? "var(--tt-accent)" : "#ccc" }}
+            >
+              <span
+                className="absolute rounded-full bg-white shadow-sm transition-transform"
+                style={{ width: 12, height: 12, top: 2, left: previewEmpty ? 16 : 2 }}
+              />
+            </button>
           </div>
-        </Card>
+        </div>
 
         <Card title="Viewer types">
+          {previewEmpty && (
+            <div className="text-[13px] text-[var(--tt-text-secondary)] mb-2">{EMPTY_NOTE}</div>
+          )}
           <DualBar
             leftPct={v.viewerTypes.leftPct}
             leftLabel={v.viewerTypes.leftLabel}
             rightLabel={v.viewerTypes.rightLabel}
             onChangeLeftPct={(val) => updateField(["viewers", "viewerTypes", "leftPct"], val)}
+            empty={previewEmpty}
           />
           <DualBar
             leftPct={v.followerTypes.leftPct}
             leftLabel={v.followerTypes.leftLabel}
             rightLabel={v.followerTypes.rightLabel}
             onChangeLeftPct={(val) => updateField(["viewers", "followerTypes", "leftPct"], val)}
+            empty={previewEmpty}
           />
         </Card>
 
