@@ -294,6 +294,7 @@ export default function AreaTrendChart({
           style={{
             left: pinnedPos.x,
             top: pinnedPos.y,
+            transition: "left 0.15s ease-out, top 0.15s ease-out",
             transform:
               activeIndex === 0
                 ? "translate(0%, calc(-100% - 10px))"

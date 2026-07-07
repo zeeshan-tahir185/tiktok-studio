@@ -174,13 +174,19 @@ export default function RetentionChart({
           <>
             <div
               className="absolute border-l border-dashed border-[#ccc] pointer-events-none"
-              style={{ left: pinnedPos.x, top: CHART_MARGIN_TOP, height: Math.max(0, pinnedPos.y - CHART_MARGIN_TOP) }}
+              style={{
+                left: pinnedPos.x,
+                top: CHART_MARGIN_TOP,
+                height: Math.max(0, pinnedPos.y - CHART_MARGIN_TOP),
+                transition: "left 0.15s ease-out, height 0.15s ease-out",
+              }}
             />
             <div
               className="absolute z-20"
               style={{
                 left: pinnedPos.x,
                 top: pinnedPos.y,
+                transition: "left 0.15s ease-out, top 0.15s ease-out",
                 transform:
                   selectedIndex === 0
                     ? "translate(0%, calc(-100% - 10px))"
