@@ -121,14 +121,19 @@ export default function RetentionChart({
             </div>
           </div>
         ))}
-        <button
-          onClick={onAddYTick}
-          title="Add a value"
-          className="absolute -right-4 z-10 opacity-0 group-hover/rchart:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
-          style={{ width: 16, height: 16, fontSize: 11, lineHeight: 1, top: -20 }}
+        <div
+          className="absolute -right-4 z-10 group/addYTick flex items-center justify-center"
+          style={{ width: 24, height: 24, top: -28 }}
         >
-          +
-        </button>
+          <button
+            onClick={onAddYTick}
+            title="Add a value"
+            className="opacity-0 group-hover/addYTick:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+            style={{ width: 16, height: 16, fontSize: 11, lineHeight: 1 }}
+          >
+            +
+          </button>
+        </div>
         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
           <AreaChart data={data} margin={{ top: CHART_MARGIN_TOP, right: 34, left: 0, bottom: 0 }}>
             <defs>

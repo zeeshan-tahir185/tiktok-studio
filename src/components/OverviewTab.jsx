@@ -160,19 +160,24 @@ export default function OverviewTab() {
                   }
                 />
               ))}
-              <button
-                onClick={() =>
-                  updateField(["overview", "trafficSource"], [
-                    ...o.trafficSource,
-                    { label: "New", pct: 0 },
-                  ])
-                }
-                title="Add a source"
-                className="absolute -bottom-1 -right-4 opacity-0 group-hover/list:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
-                style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+              <div
+                className="absolute -bottom-1 -right-4 group/addRow flex items-center justify-center"
+                style={{ width: 26, height: 26 }}
               >
-                +
-              </button>
+                <button
+                  onClick={() =>
+                    updateField(["overview", "trafficSource"], [
+                      ...o.trafficSource,
+                      { label: "New", pct: 0 },
+                    ])
+                  }
+                  title="Add a source"
+                  className="opacity-0 group-hover/addRow:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+                  style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+                >
+                  +
+                </button>
+              </div>
             </div>
           </Card>
 
@@ -196,19 +201,24 @@ export default function OverviewTab() {
                   }
                 />
               ))}
-              <button
-                onClick={() =>
-                  updateField(["overview", "searchQueries"], [
-                    ...o.searchQueries,
-                    { term: "New", pct: 0 },
-                  ])
-                }
-                title="Add a query"
-                className="absolute -bottom-1 -right-4 opacity-0 group-hover/list:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
-                style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+              <div
+                className="absolute -bottom-1 -right-4 group/addRow flex items-center justify-center"
+                style={{ width: 26, height: 26 }}
               >
-                +
-              </button>
+                <button
+                  onClick={() =>
+                    updateField(["overview", "searchQueries"], [
+                      ...o.searchQueries,
+                      { term: "New", pct: 0 },
+                    ])
+                  }
+                  title="Add a query"
+                  className="opacity-0 group-hover/addRow:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+                  style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+                >
+                  +
+                </button>
+              </div>
             </div>
           </Card>
         </div>

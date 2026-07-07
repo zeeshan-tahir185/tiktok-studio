@@ -260,23 +260,33 @@ export default function AreaTrendChart({
         </AreaChart>
       </ResponsiveContainer>
 
-      <button
-        onClick={onAddDate}
-        title="Add a date"
-        className="absolute bottom-0 right-8 opacity-0 group-hover/chart:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
-        style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+      <div
+        className="absolute bottom-0 right-8 group/addDate flex items-center justify-center"
+        style={{ width: 26, height: 26 }}
       >
-        +
-      </button>
+        <button
+          onClick={onAddDate}
+          title="Add a date"
+          className="opacity-0 group-hover/addDate:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+          style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+        >
+          +
+        </button>
+      </div>
 
-      <button
-        onClick={onAddYTick}
-        title="Add a value"
-        className="absolute top-0 right-0 opacity-0 group-hover/chart:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
-        style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+      <div
+        className="absolute top-0 right-0 group/addYTick flex items-center justify-center"
+        style={{ width: 26, height: 26 }}
       >
-        +
-      </button>
+        <button
+          onClick={onAddYTick}
+          title="Add a value"
+          className="opacity-0 group-hover/addYTick:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+          style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+        >
+          +
+        </button>
+      </div>
 
       {pinnedPos && (
         <div
