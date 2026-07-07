@@ -1,9 +1,19 @@
 import Editable from "./Editable";
 
-export default function BarRow({ label, pct, onChangePct, onChangeLabel, chevron = false }) {
+export default function BarRow({ label, pct, onChangePct, onChangeLabel, chevron = false, onRemove }) {
   const width = Math.max(0, Math.min(100, pct || 0));
   return (
-    <div className="py-2.5 first:pt-0">
+    <div className="relative group/row py-2.5 first:pt-0">
+      {onRemove && (
+        <button
+          onClick={onRemove}
+          className="absolute -right-4 top-3 opacity-0 group-hover/row:opacity-100 text-[10px] leading-none text-[var(--tt-text-secondary)] hover:text-red-500"
+          style={{ width: 10, height: 10 }}
+          title="Remove this entry"
+        >
+          ×
+        </button>
+      )}
       <div className="flex items-center justify-between mb-1.5">
         {onChangeLabel ? (
           <Editable

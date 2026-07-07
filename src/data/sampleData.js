@@ -31,7 +31,8 @@ export const initialData = {
         value: "39K",
         trend: trend(["Jun 30", "Jul 3", "Jul 6"], [18200, 35600, 39000]),
         yTickFormatter: "compact",
-        yAxisMax: 40000,
+        yMax: 40000,
+        yTickCount: 3,
       },
       {
         key: "playTime",
@@ -39,7 +40,8 @@ export const initialData = {
         value: "8h 38m 38s",
         trend: trend(["Jun 30", "Jul 3", "Jul 6"], [0.4, 3.0, 3.1]),
         yTickFormatter: "hours",
-        yAxisMax: 4,
+        yMax: 4,
+        yTickCount: 3,
       },
       {
         key: "watchTime",
@@ -47,7 +49,8 @@ export const initialData = {
         value: "0.69s",
         trend: trend(["Jun 30", "Jul 3", "Jul 6"], [6.1, 8.0, 0.69]),
         yTickFormatter: "seconds",
-        yAxisMax: 8,
+        yMax: 8,
+        yTickCount: 3,
       },
       {
         key: "fullVideo",
@@ -55,7 +58,8 @@ export const initialData = {
         value: "0.1%",
         trend: trend(["Jun 30", "Jul 3", "Jul 6"], [0.3, 0.15, 0.1]),
         yTickFormatter: "percent",
-        yAxisMax: 0.4,
+        yMax: 0.4,
+        yTickCount: 3,
       },
       {
         key: "newFollowers",
@@ -63,7 +67,8 @@ export const initialData = {
         value: "3",
         trend: trend(["Jun 30", "Jul 3", "Jul 6"], [0, 1, 1]),
         yTickFormatter: "plain",
-        yAxisMax: 4,
+        yMax: 4,
+        yTickCount: 3,
       },
     ],
     chartNote:
@@ -72,8 +77,8 @@ export const initialData = {
       peakTime: "0:03",
       duration: "0:18",
       startTime: "0:00",
-      yTopLabel: "100%",
-      yMidLabel: "50%",
+      yMax: 100,
+      yTickCount: 2,
       data: [
         { t: "0:00", pct: 100 },
         { t: "0:01", pct: 61 },
@@ -127,8 +132,8 @@ export const initialData = {
       peakTime: "0:05",
       duration: "0:18",
       startTime: "0:00",
-      yTopLabel: "100%",
-      yMidLabel: "50%",
+      yMax: 100,
+      yTickCount: 2,
       data: [
         { t: "0:00", pct: 5 },
         { t: "0:01", pct: 12 },

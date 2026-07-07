@@ -7,7 +7,7 @@ const TT_FONT =
   '"TikTokFont",system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif,"Roboto","Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
 
 export default function Header({ activeTab, onTabChange }) {
-  const { data, updateField } = useAnalyticsData();
+  const { data, updateField, profilePictureUrl } = useAnalyticsData();
 
   return (
     <div className="sticky top-0 bg-white z-10 flex justify-between px-[32px] h-16 border-b border-[var(--tt-border)]">
@@ -41,7 +41,15 @@ export default function Header({ activeTab, onTabChange }) {
           /> */}
           .
         </div>
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500" />
+        {profilePictureUrl ? (
+          <img
+            src={profilePictureUrl}
+            alt=""
+            className="w-8 h-8 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500" />
+        )}
       </div>
     </div>
   );

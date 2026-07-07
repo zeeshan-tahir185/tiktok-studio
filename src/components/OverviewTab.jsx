@@ -51,7 +51,8 @@ export default function OverviewTab() {
         <div className="px-3 pt-2">
           <AreaTrendChart
             data={active.trend}
-            yAxisMax={active.yAxisMax}
+            yMax={active.yMax}
+            yTickCount={active.yTickCount}
             yTickFormatter={active.yTickFormatter}
             onChangeY={(pointIndex, v) =>
               updateField(
@@ -65,9 +66,27 @@ export default function OverviewTab() {
                 v
               )
             }
-            onChangeYAxisMax={(v) =>
-              updateField(["overview", "metrics", activeIndex, "yAxisMax"], v)
-            }
+            onChangeYTick={(tickIndex, v) => {
+              // Every tick is derived as (position/count) * yMax, so editing
+              // any one of them just solves for the new yMax that would put
+              // it exactly there — the rest re-space themselves automatically.
+              const position = tickIndex + 1;
+              const newYMax = (v * active.yTickCount) / position;
+              updateField(["overview", "metrics", activeIndex, "yMax"], newYMax);
+            }}
+            onAddYTick={() => {
+              updateField(
+                ["overview", "metrics", activeIndex, "yTickCount"],
+                active.yTickCount + 1
+              );
+            }}
+            onRemoveYTick={() => {
+              if (active.yTickCount <= 2) return;
+              updateField(
+                ["overview", "metrics", activeIndex, "yTickCount"],
+                active.yTickCount - 1
+              );
+            }}
             onAddDate={() => {
               const lastPoint = active.trend[active.trend.length - 1];
               updateField(["overview", "metrics", activeIndex, "trend"], [
@@ -100,10 +119,20 @@ export default function OverviewTab() {
             onChangeDuration={(v) => updateField(["overview", "retention", "duration"], v)}
             startTime={o.retention.startTime}
             onChangeStartTime={(v) => updateField(["overview", "retention", "startTime"], v)}
-            yTopLabel={o.retention.yTopLabel}
-            onChangeYTopLabel={(v) => updateField(["overview", "retention", "yTopLabel"], v)}
-            yMidLabel={o.retention.yMidLabel}
-            onChangeYMidLabel={(v) => updateField(["overview", "retention", "yMidLabel"], v)}
+            yMax={o.retention.yMax}
+            yTickCount={o.retention.yTickCount}
+            onChangeYTick={(tickIndex, v) => {
+              const position = tickIndex + 1;
+              const newYMax = (v * o.retention.yTickCount) / position;
+              updateField(["overview", "retention", "yMax"], newYMax);
+            }}
+            onAddYTick={() =>
+              updateField(["overview", "retention", "yTickCount"], o.retention.yTickCount + 1)
+            }
+            onRemoveYTick={() => {
+              if (o.retention.yTickCount <= 1) return;
+              updateField(["overview", "retention", "yTickCount"], o.retention.yTickCount - 1);
+            }}
             data={o.retention.data}
             onChangeY={(i, v) => updateListItem(["overview", "retention", "data"], i, "pct", v)}
             thumbnailUrl={data.video.thumbnailUrl}
@@ -112,27 +141,75 @@ export default function OverviewTab() {
 
         <div className="space-y-3">
           <Card title="Traffic source">
-            {o.trafficSource.map((item, i) => (
-              <BarRow
-                key={i}
-                label={item.label}
-                pct={item.pct}
-                onChangePct={(v) => updateListItem(["overview", "trafficSource"], i, "pct", v)}
-                onChangeLabel={(v) => updateListItem(["overview", "trafficSource"], i, "label", v)}
-              />
-            ))}
+            <div className="relative group/list">
+              {o.trafficSource.map((item, i) => (
+                <BarRow
+                  key={i}
+                  label={item.label}
+                  pct={item.pct}
+                  onChangePct={(v) => updateListItem(["overview", "trafficSource"], i, "pct", v)}
+                  onChangeLabel={(v) => updateListItem(["overview", "trafficSource"], i, "label", v)}
+                  onRemove={
+                    o.trafficSource.length > 1
+                      ? () =>
+                          updateField(
+                            ["overview", "trafficSource"],
+                            o.trafficSource.filter((_, idx) => idx !== i)
+                          )
+                      : undefined
+                  }
+                />
+              ))}
+              <button
+                onClick={() =>
+                  updateField(["overview", "trafficSource"], [
+                    ...o.trafficSource,
+                    { label: "New", pct: 0 },
+                  ])
+                }
+                title="Add a source"
+                className="absolute -bottom-1 -right-4 opacity-0 group-hover/list:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+                style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+              >
+                +
+              </button>
+            </div>
           </Card>
 
           <Card title="Search queries">
-            {o.searchQueries.map((item, i) => (
-              <BarRow
-                key={i}
-                label={item.term}
-                pct={item.pct}
-                onChangePct={(v) => updateListItem(["overview", "searchQueries"], i, "pct", v)}
-                onChangeLabel={(v) => updateListItem(["overview", "searchQueries"], i, "term", v)}
-              />
-            ))}
+            <div className="relative group/list">
+              {o.searchQueries.map((item, i) => (
+                <BarRow
+                  key={i}
+                  label={item.term}
+                  pct={item.pct}
+                  onChangePct={(v) => updateListItem(["overview", "searchQueries"], i, "pct", v)}
+                  onChangeLabel={(v) => updateListItem(["overview", "searchQueries"], i, "term", v)}
+                  onRemove={
+                    o.searchQueries.length > 1
+                      ? () =>
+                          updateField(
+                            ["overview", "searchQueries"],
+                            o.searchQueries.filter((_, idx) => idx !== i)
+                          )
+                      : undefined
+                  }
+                />
+              ))}
+              <button
+                onClick={() =>
+                  updateField(["overview", "searchQueries"], [
+                    ...o.searchQueries,
+                    { term: "New", pct: 0 },
+                  ])
+                }
+                title="Add a query"
+                className="absolute -bottom-1 -right-4 opacity-0 group-hover/list:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+                style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+              >
+                +
+              </button>
+            </div>
           </Card>
         </div>
       </div>

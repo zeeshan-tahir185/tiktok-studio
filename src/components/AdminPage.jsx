@@ -4,12 +4,15 @@ import { useAnalyticsData } from "../data/DataContext";
 import { getUploadedVideos, deleteUploadedVideo } from "../data/videoStore";
 
 export default function AdminPage() {
-  const { addUploadedVideo } = useAnalyticsData();
+  const { addUploadedVideo, profilePictureUrl, setProfilePictureUrl } = useAnalyticsData();
   const [title, setTitle] = useState("");
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
   const [videos, setVideos] = useState(() => getUploadedVideos());
   const [success, setSuccess] = useState(false);
+
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [profileSuccess, setProfileSuccess] = useState(false);
 
   const handleFileChange = (e) => {
     const f = e.target.files?.[0];
@@ -37,12 +40,29 @@ export default function AdminPage() {
     setVideos(getUploadedVideos());
   };
 
+  const handleProfileFileChange = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => setProfilePreview(reader.result);
+    reader.readAsDataURL(f);
+  };
+
+  const handleProfileSubmit = (e) => {
+    e.preventDefault();
+    if (!profilePreview) return;
+    setProfilePictureUrl(profilePreview);
+    setProfilePreview(null);
+    setProfileSuccess(true);
+    setTimeout(() => setProfileSuccess(false), 2500);
+  };
+
   return (
     <div className="min-h-screen bg-[var(--tt-bg)] px-6 py-10">
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-[20px] font-semibold text-[var(--tt-text)]">
-            Upload video
+            Studio Admin
           </h1>
           <Link to="/" className="text-[13px] text-[var(--tt-accent)]">
             &larr; Back to Studio
@@ -93,6 +113,47 @@ export default function AdminPage() {
           {success && (
             <div className="text-[13px] text-emerald-600">
               Added. It now appears at the top of the sidebar in Studio.
+            </div>
+          )}
+        </form>
+
+        <form
+          onSubmit={handleProfileSubmit}
+          className="rounded-xl border border-[var(--tt-border)] bg-white p-5 space-y-4"
+        >
+          <h2 className="text-[16px] font-semibold text-[var(--tt-text)]">
+            Profile picture
+          </h2>
+
+          <div className="flex items-center gap-4">
+            {(profilePreview || profilePictureUrl) ? (
+              <img
+                src={profilePreview || profilePictureUrl}
+                alt=""
+                className="w-14 h-14 rounded-full object-cover shrink-0"
+              />
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 shrink-0" />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleProfileFileChange}
+              className="text-[13px]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={!profilePreview}
+            className="bg-[var(--tt-accent)] text-white text-[14px] font-medium rounded-lg px-4 py-2 disabled:opacity-40"
+          >
+            Save profile picture
+          </button>
+
+          {profileSuccess && (
+            <div className="text-[13px] text-emerald-600">
+              Saved. It now appears in the Studio header.
             </div>
           )}
         </form>

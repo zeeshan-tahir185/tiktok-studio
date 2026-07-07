@@ -11,15 +11,6 @@ import {
 import Editable from "./Editable";
 
 const CHART_HEIGHT = 220;
-const TICK_PROPORTIONS = [0, 0.25, 0.5, 0.75, 1];
-
-function niceMax(max) {
-  if (max <= 0) return 1;
-  const mag = Math.pow(10, Math.floor(Math.log10(max)));
-  const norm = max / mag;
-  const niceNorm = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10;
-  return niceNorm * mag;
-}
 
 function formatTick(v, kind) {
   switch (kind) {
@@ -117,25 +108,40 @@ function EditableXTick({ x, y, payload, index, lastIndex, canRemove, onChangeDat
   );
 }
 
-// Every tick's displayed value is always yAxisMax * its fixed proportion —
-// so labels can never drift out of sync with where they're actually drawn.
-// Editing a tick solves for the new yAxisMax that keeps that same identity
-// true, then the whole scale (and the plotted line) updates to match.
-function EditableYTick({ x, y, index, yAxisMax, yTickFormatter, onChangeYAxisMax }) {
+// index 0 is always the fixed, non-editable "0" baseline tick (hidden,
+// matches the reference design). Indices 1..N map 1:1 to yTicks[0..N-1] —
+// what's displayed IS the real value used to position that gridline, so
+// there's no proportional math left to ever drift out of sync.
+function EditableYTick({ x, y, index, yTicks, yTickFormatter, canRemove, onChangeYTick, onRemoveYTick }) {
   if (index === 0) return null;
-  const proportion = TICK_PROPORTIONS[index];
-  const display = formatTick(yAxisMax * proportion, yTickFormatter);
+  const tickIndex = index - 1;
+  const value = yTicks[tickIndex];
+  const display = formatTick(value, yTickFormatter);
   return (
-    <foreignObject x={Math.round(x)} y={Math.round(y - 8)} width={46} height={16}>
-      <div xmlns="http://www.w3.org/1999/xhtml" style={{ whiteSpace: "nowrap", lineHeight: "16px" }}>
+    <foreignObject x={Math.round(x)} y={Math.round(y - 8)} width={62} height={16}>
+      <div
+        xmlns="http://www.w3.org/1999/xhtml"
+        className="group"
+        style={{ display: "flex", alignItems: "center", gap: 3, whiteSpace: "nowrap", lineHeight: "16px" }}
+      >
         <Editable
           value={display}
           onChange={(text) => {
             const parsed = parseAxisValue(text, yTickFormatter);
-            if (parsed !== null && parsed > 0) onChangeYAxisMax(parsed / proportion);
+            if (parsed !== null && parsed > 0) onChangeYTick(tickIndex, parsed);
           }}
           className="text-[11px] text-[var(--tt-text-secondary)] inline-block"
         />
+        {canRemove && (
+          <button
+            onClick={() => onRemoveYTick(tickIndex)}
+            className="opacity-0 group-hover:opacity-100 text-[10px] leading-none text-[var(--tt-text-secondary)] hover:text-red-500 shrink-0"
+            style={{ width: 10, height: 10 }}
+            title="Remove this value"
+          >
+            ×
+          </button>
+        )}
       </div>
     </foreignObject>
   );
@@ -147,8 +153,11 @@ export default function AreaTrendChart({
   onChangeDate,
   onAddDate,
   onRemoveDate,
-  yAxisMax,
-  onChangeYAxisMax,
+  yMax,
+  yTickCount,
+  onChangeYTick,
+  onAddYTick,
+  onRemoveYTick,
   yTickFormatter = "plain",
 }) {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -158,11 +167,17 @@ export default function AreaTrendChart({
   // has added/removed — so nodes always match the visible date count 1:1.
   const chartData = data;
 
-  // Fall back to an auto "nice" max only if the metric has no stored
-  // yAxisMax yet (e.g. older saved data) — once set, it's the sole source
-  // of truth for where every tick and every data point is plotted.
-  const effectiveMax = yAxisMax ?? niceMax(Math.max(...chartData.map((d) => d.value), 1));
-  const yTicks = TICK_PROPORTIONS.map((p) => effectiveMax * p);
+  // The Y axis always divides [0, yMax] into `yTickCount` EQUAL steps —
+  // exactly mirroring how the X axis's categorical layout auto-spaces
+  // whatever dates exist evenly. Deriving every tick from a single step
+  // means add/remove can never leave an uneven gap (the old bug: dropping
+  // just one raw value out of an arbitrary array left a lopsided space
+  // where it used to be). The domain is driven ONLY by yMax (not the data
+  // values), so removing a division actually shrinks the visible scale.
+  const step = yMax / yTickCount;
+  const yTicks = Array.from({ length: yTickCount }, (_, i) => (i + 1) * step);
+  const domainMax = Math.max(yMax, 1);
+  const allTicks = [0, ...yTicks];
 
   const handlePosition = (index, pos) => {
     setPositions((prev) => {
@@ -189,6 +204,7 @@ export default function AreaTrendChart({
             strokeDasharray="1 3"
             strokeLinecap="round"
             stroke="#a9aab0"
+            strokeOpacity={0.55}
           />
           <XAxis
             dataKey="date"
@@ -208,17 +224,19 @@ export default function AreaTrendChart({
           />
           <YAxis
             orientation="right"
-            domain={[0, effectiveMax]}
-            ticks={yTicks}
+            domain={[0, domainMax]}
+            ticks={allTicks}
             axisLine={false}
             tickLine={false}
-            width={46}
+            width={62}
             tick={(props) => (
               <EditableYTick
                 {...props}
-                yAxisMax={effectiveMax}
+                yTicks={yTicks}
                 yTickFormatter={yTickFormatter}
-                onChangeYAxisMax={onChangeYAxisMax}
+                canRemove={yTicks.length > 2}
+                onChangeYTick={onChangeYTick}
+                onRemoveYTick={onRemoveYTick}
               />
             )}
           />
@@ -245,7 +263,16 @@ export default function AreaTrendChart({
       <button
         onClick={onAddDate}
         title="Add a date"
-        className="absolute bottom-0 right-0 opacity-0 group-hover/chart:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+        className="absolute bottom-0 right-8 opacity-0 group-hover/chart:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+        style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+      >
+        +
+      </button>
+
+      <button
+        onClick={onAddYTick}
+        title="Add a value"
+        className="absolute top-0 right-0 opacity-0 group-hover/chart:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
         style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
       >
         +
@@ -265,16 +292,18 @@ export default function AreaTrendChart({
                 : "translate(-50%, calc(-100% - 10px))",
           }}
         >
-          <div className="bg-white border border-[var(--tt-border)] rounded-lg shadow-md px-3 py-2 text-center">
-            <div className="text-[12px] text-[var(--tt-text-secondary)]">
+          <div className="bg-white border border-[var(--tt-border)] rounded-sm shadow-md px-3 py-2 text-center">
+            <div className="text-[13px] text-[var(--tt-text-secondary)]">
               {data[activeIndex].date}
             </div>
             <div className="flex items-center justify-center gap-1.5 mt-0.5">
-              <span className="w-2 h-2 rounded-full border-[1.5px] border-[var(--tt-accent)] bg-white shrink-0" />
+              <span className="w-[7px] h-[7px] rounded-full border-[1.5px] border-[var(--tt-accent)] bg-white shrink-0" />
               <Editable
-                value={data[activeIndex].value}
-                numeric
-                onChange={(v) => onChangeY(activeIndex, v)}
+                value={formatTick(data[activeIndex].value, yTickFormatter)}
+                onChange={(text) => {
+                  const parsed = parseAxisValue(text, yTickFormatter);
+                  if (parsed !== null) onChangeY(activeIndex, parsed);
+                }}
                 className="text-[15px] font-semibold text-black"
               />
             </div>

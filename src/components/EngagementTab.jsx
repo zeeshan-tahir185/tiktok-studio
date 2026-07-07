@@ -19,10 +19,20 @@ export default function EngagementTab() {
           onChangeDuration={(v) => updateField(["engagement", "likes", "duration"], v)}
           startTime={e.likes.startTime}
           onChangeStartTime={(v) => updateField(["engagement", "likes", "startTime"], v)}
-          yTopLabel={e.likes.yTopLabel}
-          onChangeYTopLabel={(v) => updateField(["engagement", "likes", "yTopLabel"], v)}
-          yMidLabel={e.likes.yMidLabel}
-          onChangeYMidLabel={(v) => updateField(["engagement", "likes", "yMidLabel"], v)}
+          yMax={e.likes.yMax}
+          yTickCount={e.likes.yTickCount}
+          onChangeYTick={(tickIndex, v) => {
+            const position = tickIndex + 1;
+            const newYMax = (v * e.likes.yTickCount) / position;
+            updateField(["engagement", "likes", "yMax"], newYMax);
+          }}
+          onAddYTick={() =>
+            updateField(["engagement", "likes", "yTickCount"], e.likes.yTickCount + 1)
+          }
+          onRemoveYTick={() => {
+            if (e.likes.yTickCount <= 1) return;
+            updateField(["engagement", "likes", "yTickCount"], e.likes.yTickCount - 1);
+          }}
           data={e.likes.data}
           onChangeY={(i, v) => updateListItem(["engagement", "likes", "data"], i, "pct", v)}
           thumbnailUrl={data.video.thumbnailUrl}

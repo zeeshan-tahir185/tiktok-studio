@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { initialData } from "./sampleData";
 import { getUploadedVideos, addUploadedVideo as persistUploadedVideo } from "./videoStore";
+import { getProfilePicture, setProfilePicture as persistProfilePicture } from "./profileStore";
 
 const DataContext = createContext(null);
 
@@ -21,6 +22,7 @@ function setPath(obj, path, value) {
 export function DataProvider({ children }) {
   const [data, setData] = useState(initialData);
   const [uploadedVideos, setUploadedVideos] = useState(() => getUploadedVideos());
+  const [profilePictureUrl, setProfilePictureUrlState] = useState(() => getProfilePicture());
   const [activeVideoId, setActiveVideoId] = useState(
     () => uploadedVideos[0]?.id ?? initialData.sidebarVideos.find((v) => v.active)?.id
   );
@@ -83,6 +85,11 @@ export function DataProvider({ children }) {
     return entry;
   };
 
+  const setProfilePictureUrl = (dataUrl) => {
+    persistProfilePicture(dataUrl);
+    setProfilePictureUrlState(dataUrl);
+  };
+
   const value = useMemo(
     () => ({
       data,
@@ -92,8 +99,10 @@ export function DataProvider({ children }) {
       activeVideoId,
       selectVideo,
       addUploadedVideo,
+      profilePictureUrl,
+      setProfilePictureUrl,
     }),
-    [data, sidebarList, activeVideoId]
+    [data, sidebarList, activeVideoId, profilePictureUrl]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
