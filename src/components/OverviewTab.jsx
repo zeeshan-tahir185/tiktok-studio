@@ -8,6 +8,8 @@ import RetentionChart from "./RetentionChart";
 import BarRow from "./BarRow";
 import Card from "./Card";
 
+const EMPTY_NOTE = "tips_of_update_wait";
+
 function parseLeadingNumber(text) {
   const match = String(text).match(/-?[\d.,]+\s*([kKmM]?)/);
   if (!match) return null;
@@ -25,6 +27,7 @@ export default function OverviewTab() {
 
   const activeIndex = o.metrics.findIndex((m) => m.key === activeKey);
   const active = o.metrics[activeIndex];
+  const [searchQueriesEmpty, setSearchQueriesEmpty] = useState(false);
 
   return (
     <div className="px-8 py-8 space-y-3 bg-[#FAF9FA]">
@@ -182,46 +185,73 @@ export default function OverviewTab() {
             </div>
           </Card>
 
-          <Card title="Search queries">
-            <div className="relative group/list">
-              {o.searchQueries.map((item, i) => (
-                <BarRow
-                  key={i}
-                  label={item.term}
-                  pct={item.pct}
-                  onChangePct={(v) => updateListItem(["overview", "searchQueries"], i, "pct", v)}
-                  onChangeLabel={(v) => updateListItem(["overview", "searchQueries"], i, "term", v)}
-                  onRemove={
-                    o.searchQueries.length > 1
-                      ? () =>
-                          updateField(
-                            ["overview", "searchQueries"],
-                            o.searchQueries.filter((_, idx) => idx !== i)
-                          )
-                      : undefined
-                  }
-                />
-              ))}
-              <div
-                className="absolute -bottom-1 -right-4 group/addRow flex items-center justify-center"
-                style={{ width: 26, height: 26 }}
+          <div className="relative">
+            <Card title="Search queries">
+              {searchQueriesEmpty ? (
+                <div className="text-[13px] text-[var(--tt-text-secondary)]">{EMPTY_NOTE}</div>
+              ) : (
+                <div className="relative group/list">
+                  {o.searchQueries.map((item, i) => (
+                    <BarRow
+                      key={i}
+                      label={item.term}
+                      pct={item.pct}
+                      onChangePct={(v) => updateListItem(["overview", "searchQueries"], i, "pct", v)}
+                      onChangeLabel={(v) => updateListItem(["overview", "searchQueries"], i, "term", v)}
+                      onRemove={
+                        o.searchQueries.length > 1
+                          ? () =>
+                              updateField(
+                                ["overview", "searchQueries"],
+                                o.searchQueries.filter((_, idx) => idx !== i)
+                              )
+                          : undefined
+                      }
+                    />
+                  ))}
+                  <div
+                    className="absolute -bottom-1 -right-4 group/addRow flex items-center justify-center"
+                    style={{ width: 26, height: 26 }}
+                  >
+                    <button
+                      onClick={() =>
+                        updateField(["overview", "searchQueries"], [
+                          ...o.searchQueries,
+                          { term: "New", pct: 0 },
+                        ])
+                      }
+                      title="Add a query"
+                      className="opacity-0 group-hover/addRow:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+                      style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
+            </Card>
+
+            <div
+              className="absolute top-4 right-4 group/emptyToggle flex items-center justify-end"
+              style={{ width: 40, height: 24 }}
+            >
+              <button
+                onClick={() => setSearchQueriesEmpty((s) => !s)}
+                title={
+                  searchQueriesEmpty
+                    ? "Showing new-video (empty) preview — click to restore sample data"
+                    : "Preview the new-video (not-enough-data) empty state"
+                }
+                className="relative rounded-full opacity-0 group-hover/emptyToggle:opacity-100 transition-colors shrink-0"
+                style={{ width: 30, height: 16, background: searchQueriesEmpty ? "var(--tt-accent)" : "#ccc" }}
               >
-                <button
-                  onClick={() =>
-                    updateField(["overview", "searchQueries"], [
-                      ...o.searchQueries,
-                      { term: "New", pct: 0 },
-                    ])
-                  }
-                  title="Add a query"
-                  className="opacity-0 group-hover/addRow:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
-                  style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
-                >
-                  +
-                </button>
-              </div>
+                <span
+                  className="absolute rounded-full bg-white shadow-sm transition-transform"
+                  style={{ width: 12, height: 12, top: 2, left: searchQueriesEmpty ? 16 : 2 }}
+                />
+              </button>
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>

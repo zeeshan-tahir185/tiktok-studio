@@ -6,7 +6,7 @@ import GenderDonut from "./GenderDonut";
 import Editable from "./Editable";
 import Card from "./Card";
 
-const EMPTY_NOTE = "You'll be able to see this information once there's enough data for analysis.";
+const EMPTY_NOTE = "tips_of_update_wait";
 
 export default function ViewersTab() {
   const { data, updateField, updateListItem } = useAnalyticsData();
@@ -87,15 +87,15 @@ export default function ViewersTab() {
           )}
           <DualBar
             leftPct={v.viewerTypes.leftPct}
-            leftLabel={v.viewerTypes.leftLabel}
-            rightLabel={v.viewerTypes.rightLabel}
+            leftLabel={previewEmpty ? v.viewerTypes.rightLabel : v.viewerTypes.leftLabel}
+            rightLabel={previewEmpty ? v.viewerTypes.leftLabel : v.viewerTypes.rightLabel}
             onChangeLeftPct={(val) => updateField(["viewers", "viewerTypes", "leftPct"], val)}
             empty={previewEmpty}
           />
           <DualBar
             leftPct={v.followerTypes.leftPct}
-            leftLabel={v.followerTypes.leftLabel}
-            rightLabel={v.followerTypes.rightLabel}
+            leftLabel={previewEmpty ? v.followerTypes.rightLabel : v.followerTypes.leftLabel}
+            rightLabel={previewEmpty ? v.followerTypes.leftLabel : v.followerTypes.rightLabel}
             onChangeLeftPct={(val) => updateField(["viewers", "followerTypes", "leftPct"], val)}
             empty={previewEmpty}
           />

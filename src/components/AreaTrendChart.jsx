@@ -80,7 +80,7 @@ function EditableXTick({ x, y, payload, index, lastIndex, canRemove, onChangeDat
     justify = "flex-end";
   }
   return (
-    <foreignObject x={Math.round(boxX)} y={Math.round(y + 4)} width={width} height={20}>
+    <foreignObject x={Math.round(boxX)} y={Math.round(y - 9)} width={width} height={20}>
       <div
         xmlns="http://www.w3.org/1999/xhtml"
         className="group"
@@ -219,7 +219,8 @@ export default function AreaTrendChart({
             )}
             axisLine={{ stroke: "#eee" }}
             tickLine={false}
-            padding={{ right: 20 }}
+            tickMargin={2}
+            padding={{ right: 0 }}
           />
           <YAxis
             orientation="right"
