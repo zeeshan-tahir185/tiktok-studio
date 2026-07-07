@@ -16,6 +16,13 @@ export default function EngagementTab() {
           peakTime={e.likes.peakTime}
           onChangePeakTime={(v) => updateField(["engagement", "likes", "peakTime"], v)}
           duration={e.likes.duration}
+          onChangeDuration={(v) => updateField(["engagement", "likes", "duration"], v)}
+          startTime={e.likes.startTime}
+          onChangeStartTime={(v) => updateField(["engagement", "likes", "startTime"], v)}
+          yTopLabel={e.likes.yTopLabel}
+          onChangeYTopLabel={(v) => updateField(["engagement", "likes", "yTopLabel"], v)}
+          yMidLabel={e.likes.yMidLabel}
+          onChangeYMidLabel={(v) => updateField(["engagement", "likes", "yMidLabel"], v)}
           data={e.likes.data}
           onChangeY={(i, v) => updateListItem(["engagement", "likes", "data"], i, "pct", v)}
           thumbnailUrl={data.video.thumbnailUrl}

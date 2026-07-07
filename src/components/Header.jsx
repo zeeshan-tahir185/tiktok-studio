@@ -34,11 +34,11 @@ export default function Header({ activeTab, onTabChange }) {
       <div className="h-full flex items-center gap-3">
         <div style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}>
           Updated on real time{" "}
-          <Editable
+          {/* <Editable
             value={data.updatedOn}
             onChange={(v) => updateField(["updatedOn"], v)}
             style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}
-          />
+          /> */}
           .
         </div>
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500" />

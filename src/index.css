@@ -54,7 +54,9 @@ select,
 textarea {
   font-family: inherit;
 }
-
+.recharts-surface, g{
+  outline: none !important;
+}
 button {
   cursor: pointer;
 }

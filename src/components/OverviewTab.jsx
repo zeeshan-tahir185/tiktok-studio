@@ -51,6 +51,7 @@ export default function OverviewTab() {
         <div className="px-3 pt-2">
           <AreaTrendChart
             data={active.trend}
+            yAxisMax={active.yAxisMax}
             yTickFormatter={active.yTickFormatter}
             onChangeY={(pointIndex, v) =>
               updateField(
@@ -58,12 +59,21 @@ export default function OverviewTab() {
                 v
               )
             }
+            onChangeDate={(pointIndex, v) =>
+              updateField(
+                ["overview", "metrics", activeIndex, "trend", pointIndex, "date"],
+                v
+              )
+            }
+            onChangeYAxisMax={(v) =>
+              updateField(["overview", "metrics", activeIndex, "yAxisMax"], v)
+            }
           />
         </div>
-        <NoteBar
+        {/* <NoteBar
           value={o.chartNote}
           onChange={(v) => updateField(["overview", "chartNote"], v)}
-        />
+        /> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
@@ -73,6 +83,13 @@ export default function OverviewTab() {
             peakTime={o.retention.peakTime}
             onChangePeakTime={(v) => updateField(["overview", "retention", "peakTime"], v)}
             duration={o.retention.duration}
+            onChangeDuration={(v) => updateField(["overview", "retention", "duration"], v)}
+            startTime={o.retention.startTime}
+            onChangeStartTime={(v) => updateField(["overview", "retention", "startTime"], v)}
+            yTopLabel={o.retention.yTopLabel}
+            onChangeYTopLabel={(v) => updateField(["overview", "retention", "yTopLabel"], v)}
+            yMidLabel={o.retention.yMidLabel}
+            onChangeYMidLabel={(v) => updateField(["overview", "retention", "yMidLabel"], v)}
             data={o.retention.data}
             onChangeY={(i, v) => updateListItem(["overview", "retention", "data"], i, "pct", v)}
             thumbnailUrl={data.video.thumbnailUrl}

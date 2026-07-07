@@ -50,6 +50,13 @@ export default function RetentionChart({
   peakTime,
   onChangePeakTime,
   duration,
+  onChangeDuration,
+  startTime,
+  onChangeStartTime,
+  yTopLabel,
+  onChangeYTopLabel,
+  yMidLabel,
+  onChangeYMidLabel,
   data,
   onChangeY,
   thumbnailUrl,
@@ -83,16 +90,24 @@ export default function RetentionChart({
           style={{ top: CHART_MARGIN_TOP + (CHART_HEIGHT - CHART_MARGIN_TOP) / 2 }}
         />
         <div
-          className="absolute right-0 text-[11px] text-[var(--tt-text-secondary)] -translate-y-1/2"
+          className="absolute right-0 z-10 -translate-y-1/2"
           style={{ top: CHART_MARGIN_TOP }}
         >
-          100%
+          <Editable
+            value={yTopLabel}
+            onChange={onChangeYTopLabel}
+            className="text-[11px] text-[var(--tt-text-secondary)]"
+          />
         </div>
         <div
-          className="absolute right-0 text-[11px] text-[var(--tt-text-secondary)] -translate-y-1/2"
+          className="absolute right-0 z-10 -translate-y-1/2"
           style={{ top: CHART_MARGIN_TOP + (CHART_HEIGHT - CHART_MARGIN_TOP) / 2 }}
         >
-          50%
+          <Editable
+            value={yMidLabel}
+            onChange={onChangeYMidLabel}
+            className="text-[11px] text-[var(--tt-text-secondary)]"
+          />
         </div>
         <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
           <AreaChart data={data} margin={{ top: CHART_MARGIN_TOP, right: 34, left: 0, bottom: 0 }}>
@@ -139,8 +154,10 @@ export default function RetentionChart({
       </div>
 
       <div className="flex items-center justify-between text-[12px] text-[var(--tt-text-secondary)]">
-        <span>0:00 ({firstPct}%)</span>
-        <span>{duration}</span>
+        <span>
+          <Editable as="span" value={startTime} onChange={onChangeStartTime} /> ({firstPct}%)
+        </span>
+        <Editable value={duration} onChange={onChangeDuration} />
       </div>
     </div>
   );
