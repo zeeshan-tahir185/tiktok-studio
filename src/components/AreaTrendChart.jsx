@@ -203,8 +203,7 @@ export default function AreaTrendChart({
             vertical={false}
             strokeDasharray="1 3"
             strokeLinecap="round"
-            stroke="#a9aab0"
-            strokeOpacity={0.55}
+            stroke="var(--tt-border)"
           />
           <XAxis
             dataKey="date"

@@ -10,46 +10,48 @@ export default function Header({ activeTab, onTabChange }) {
   const { data, updateField, profilePictureUrl } = useAnalyticsData();
 
   return (
-    <div className="sticky top-0 bg-white z-10 flex justify-between px-[32px] h-16 border-b border-[var(--tt-border)]">
-      <div className="h-full flex items-center gap-6">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => onTabChange(tab)}
-            className="relative h-full flex items-center"
-            style={{
-              fontSize: 14,
-              fontWeight: 500,
-              color: activeTab === tab ? "#000" : "rgba(0,0,0,.34)",
-            }}
-          >
-            {tab}
-            {activeTab === tab && (
-              <span className="absolute left-0 right-0 bottom-0 h-[2.5px] bg-black rounded-full" />
-            )}
-          </button>
-        ))}
-      </div>
-
-      <div className="h-full flex items-center gap-3">
-        <div style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}>
-          Updated in real time
-          {/* <Editable
-            value={data.updatedOn}
-            onChange={(v) => updateField(["updatedOn"], v)}
-            style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}
-          /> */}
-          .
+    <div className="sticky top-0 bg-white z-10 h-16 border-b border-[var(--tt-border)]">
+      <div className="max-w-[1608px] mx-auto h-full flex justify-between px-[32px]">
+        <div className="h-full flex items-center gap-6">
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => onTabChange(tab)}
+              className="relative h-full flex items-center"
+              style={{
+                fontSize: 14,
+                fontWeight: 500,
+                color: activeTab === tab ? "#000" : "rgba(0,0,0,.34)",
+              }}
+            >
+              {tab}
+              {activeTab === tab && (
+                <span className="absolute left-0 right-0 bottom-0 h-[2.5px] bg-black rounded-full" />
+              )}
+            </button>
+          ))}
         </div>
-        {profilePictureUrl ? (
-          <img
-            src={profilePictureUrl}
-            alt=""
-            className="w-8 h-8 rounded-full object-cover"
-          />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500" />
-        )}
+
+        <div className="h-full flex items-center gap-3">
+          <div style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}>
+            Updated in real time
+            {/* <Editable
+              value={data.updatedOn}
+              onChange={(v) => updateField(["updatedOn"], v)}
+              style={{ fontFamily: TT_FONT, fontSize: 14, fontWeight: 500, color: "rgba(0,0,0,.48)" }}
+            /> */}
+            .
+          </div>
+          {profilePictureUrl ? (
+            <img
+              src={profilePictureUrl}
+              alt=""
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500" />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -11,12 +11,14 @@ export default function StudioApp() {
   return (
     <div className="flex min-h-screen bg-[var(--tt-bg)]">
       <Sidebar />
-      <main className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 flex flex-col">
         <Header activeTab={activeTab} onTabChange={setActiveTab} />
-        {activeTab === "Overview" && <OverviewTab />}
-        {activeTab === "Viewers" && <ViewersTab />}
-        {activeTab === "Engagement" && <EngagementTab />}
-      </main>
+        <main className="w-full max-w-[1608px] mx-auto">
+          {activeTab === "Overview" && <OverviewTab />}
+          {activeTab === "Viewers" && <ViewersTab />}
+          {activeTab === "Engagement" && <EngagementTab />}
+        </main>
+      </div>
     </div>
   );
 }

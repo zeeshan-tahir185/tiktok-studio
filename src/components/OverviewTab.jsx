@@ -136,6 +136,7 @@ export default function OverviewTab() {
             data={o.retention.data}
             onChangeY={(i, v) => updateListItem(["overview", "retention", "data"], i, "pct", v)}
             thumbnailUrl={data.video.thumbnailUrl}
+            extraTopLine
           />
         </Card>
 

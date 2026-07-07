@@ -55,6 +55,7 @@ export default function RetentionChart({
   data,
   onChangeY,
   thumbnailUrl,
+  extraTopLine = false,
 }) {
   const firstPct = data[0]?.pct ?? 0;
   const [scrub, setScrub] = useState(0);
@@ -90,6 +91,9 @@ export default function RetentionChart({
       <VideoPlayPreview thumbnailUrl={thumbnailUrl} />
 
       <div className="relative mt-4 group/rchart" onMouseLeave={() => setSelectedIndex(null)}>
+        {extraTopLine && (
+          <div className="absolute left-0 right-9 border-t border-dashed border-[#e5e6e9]" style={{ top: 0 }} />
+        )}
         {yTicks.map((v, i) => (
           <div key={i} className="absolute left-0 right-9 border-t border-dashed border-[#e5e6e9]" style={{ top: topFor(v) }} />
         ))}
