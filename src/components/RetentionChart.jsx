@@ -77,13 +77,13 @@ export default function RetentionChart({
 
   return (
     <div>
-      <div className="text-[13px] text-[var(--tt-text-secondary)] mb-4">
+      <div className="text-[14px] text-[var(--tt-text)]  font-medium mb-4">
         {sentence.before}{" "}
         <Editable
           as="span"
           value={peakTime}
           onChange={onChangePeakTime}
-          className="text-[var(--tt-text)] font-medium"
+          className=""
         />
         {sentence.after}
       </div>

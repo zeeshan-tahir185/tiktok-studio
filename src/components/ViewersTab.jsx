@@ -124,16 +124,45 @@ export default function ViewersTab() {
         </Card>
 
         <Card title="Locations">
-          {v.locations.map((item, i) => (
-            <BarRow
-              key={i}
-              label={item.country}
-              pct={item.pct}
-              chevron={item.expandable}
-              onChangePct={(val) => updateListItem(["viewers", "locations"], i, "pct", val)}
-              onChangeLabel={(val) => updateListItem(["viewers", "locations"], i, "country", val)}
-            />
-          ))}
+          <div className="relative group/list">
+            {v.locations.map((item, i) => (
+              <BarRow
+                key={i}
+                label={item.country}
+                pct={item.pct}
+                chevron={item.expandable}
+                onChangePct={(val) => updateListItem(["viewers", "locations"], i, "pct", val)}
+                onChangeLabel={(val) => updateListItem(["viewers", "locations"], i, "country", val)}
+                onRemove={
+                  v.locations.length > 1
+                    ? () =>
+                        updateField(
+                          ["viewers", "locations"],
+                          v.locations.filter((_, idx) => idx !== i)
+                        )
+                    : undefined
+                }
+              />
+            ))}
+            <div
+              className="absolute -bottom-1 -right-4 group/addRow flex items-center justify-center"
+              style={{ width: 26, height: 26 }}
+            >
+              <button
+                onClick={() =>
+                  updateField(["viewers", "locations"], [
+                    ...v.locations,
+                    { country: "New", pct: 0 },
+                  ])
+                }
+                title="Add a location"
+                className="opacity-0 group-hover/addRow:opacity-100 flex items-center justify-center rounded-full bg-white border border-[var(--tt-border)] text-[var(--tt-text-secondary)] hover:text-[var(--tt-accent)] hover:border-[var(--tt-accent)] shadow-sm"
+                style={{ width: 18, height: 18, fontSize: 12, lineHeight: 1 }}
+              >
+                +
+              </button>
+            </div>
+          </div>
         </Card>
       </div>
     </div>

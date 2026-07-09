@@ -226,6 +226,7 @@ export default function AreaTrendChart({
             orientation="right"
             domain={[0, domainMax]}
             ticks={allTicks}
+            interval={0}
             axisLine={false}
             tickLine={false}
             width={62}

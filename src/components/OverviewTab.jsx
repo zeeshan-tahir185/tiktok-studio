@@ -78,9 +78,20 @@ export default function OverviewTab() {
               updateField(["overview", "metrics", activeIndex, "yMax"], newYMax);
             }}
             onAddYTick={() => {
+              // Keep every existing tick's value exactly as-is — extend the
+              // range by one more step instead of redistributing yMax across
+              // more divisions (that redistribution is what changed already-
+              // visible tick numbers on add; only the new top tick should
+              // appear, pre-filled with the next value, editable like any
+              // other tick).
+              const step = active.yMax / active.yTickCount;
               updateField(
                 ["overview", "metrics", activeIndex, "yTickCount"],
                 active.yTickCount + 1
+              );
+              updateField(
+                ["overview", "metrics", activeIndex, "yMax"],
+                active.yMax + step
               );
             }}
             onRemoveYTick={() => {
