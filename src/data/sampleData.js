@@ -120,7 +120,7 @@ export const initialData = {
     ],
     gender: { malePct: 47, femalePct: 51, otherPct: 2 },
     locations: [
-      { country: "United States", pct: 38.4, expandable: true },
+      { country: "United States", pct: 38.4 },
       { country: "United Kingdom", pct: 14.2 },
       { country: "Canada", pct: 11.0 },
       { country: "Australia", pct: 8.3 },

@@ -130,7 +130,6 @@ export default function ViewersTab() {
                 key={i}
                 label={item.country}
                 pct={item.pct}
-                chevron={item.expandable}
                 onChangePct={(val) => updateListItem(["viewers", "locations"], i, "pct", val)}
                 onChangeLabel={(val) => updateListItem(["viewers", "locations"], i, "country", val)}
                 onRemove={
@@ -141,6 +140,39 @@ export default function ViewersTab() {
                           v.locations.filter((_, idx) => idx !== i)
                         )
                     : undefined
+                }
+                allowStates
+                states={item.states}
+                onAddStatesFeature={() =>
+                  updateField(["viewers", "locations", i, "states"], [{ label: "New", pct: 0 }])
+                }
+                onRemoveStatesFeature={() =>
+                  updateField(["viewers", "locations", i, "states"], undefined)
+                }
+                onAddState={() =>
+                  updateField(
+                    ["viewers", "locations", i, "states"],
+                    [...(item.states || []), { label: "New", pct: 0 }]
+                  )
+                }
+                onRemoveState={(si) => {
+                  if ((item.states || []).length <= 1) return;
+                  updateField(
+                    ["viewers", "locations", i, "states"],
+                    item.states.filter((_, idx) => idx !== si)
+                  );
+                }}
+                onChangeStateLabel={(si, v2) =>
+                  updateField(
+                    ["viewers", "locations", i, "states"],
+                    item.states.map((s, idx) => (idx === si ? { ...s, label: v2 } : s))
+                  )
+                }
+                onChangeStatePct={(si, v2) =>
+                  updateField(
+                    ["viewers", "locations", i, "states"],
+                    item.states.map((s, idx) => (idx === si ? { ...s, pct: v2 } : s))
+                  )
                 }
               />
             ))}
