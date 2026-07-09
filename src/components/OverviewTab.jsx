@@ -21,13 +21,18 @@ function parseLeadingNumber(text) {
 }
 
 export default function OverviewTab() {
-  const { data, updateField, updateListItem } = useAnalyticsData();
+  const {
+    data,
+    updateField,
+    updateListItem,
+    searchQueriesPreviewEmpty: searchQueriesEmpty,
+    setSearchQueriesPreviewEmpty: setSearchQueriesEmpty,
+  } = useAnalyticsData();
   const o = data.overview;
   const [activeKey, setActiveKey] = useState(o.metrics[0].key);
 
   const activeIndex = o.metrics.findIndex((m) => m.key === activeKey);
   const active = o.metrics[activeIndex];
-  const [searchQueriesEmpty, setSearchQueriesEmpty] = useState(false);
 
   return (
     <div className="px-8 py-8 space-y-3 bg-[#FAF9FA]">

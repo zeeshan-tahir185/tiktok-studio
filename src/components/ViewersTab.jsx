@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAnalyticsData } from "../data/DataContext";
 import BarRow from "./BarRow";
 import DualBar from "./DualBar";
@@ -9,9 +8,14 @@ import Card from "./Card";
 const EMPTY_NOTE = "tips_of_update_wait";
 
 export default function ViewersTab() {
-  const { data, updateField, updateListItem } = useAnalyticsData();
+  const {
+    data,
+    updateField,
+    updateListItem,
+    viewersPreviewEmpty: previewEmpty,
+    setViewersPreviewEmpty: setPreviewEmpty,
+  } = useAnalyticsData();
   const v = data.viewers;
-  const [previewEmpty, setPreviewEmpty] = useState(false);
 
   return (
     <div className="px-8 py-8 grid grid-cols-1 lg:grid-cols-2 gap-3">

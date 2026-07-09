@@ -27,6 +27,14 @@ export function DataProvider({ children }) {
     () => uploadedVideos[0]?.id ?? initialData.sidebarVideos.find((v) => v.active)?.id
   );
 
+  // Empty-state preview toggles live here (not in the tab components
+  // themselves) so flipping one, switching tabs, and coming back keeps it
+  // exactly as the user left it — the tab components unmount/remount on
+  // every switch (see StudioApp.jsx's `activeTab &&` conditional rendering),
+  // which would otherwise reset a local useState back to its default.
+  const [viewersPreviewEmpty, setViewersPreviewEmpty] = useState(false);
+  const [searchQueriesPreviewEmpty, setSearchQueriesPreviewEmpty] = useState(false);
+
   const updateField = (path, value) => {
     setData((prev) => setPath(prev, path, value));
   };
@@ -101,8 +109,19 @@ export function DataProvider({ children }) {
       addUploadedVideo,
       profilePictureUrl,
       setProfilePictureUrl,
+      viewersPreviewEmpty,
+      setViewersPreviewEmpty,
+      searchQueriesPreviewEmpty,
+      setSearchQueriesPreviewEmpty,
     }),
-    [data, sidebarList, activeVideoId, profilePictureUrl]
+    [
+      data,
+      sidebarList,
+      activeVideoId,
+      profilePictureUrl,
+      viewersPreviewEmpty,
+      searchQueriesPreviewEmpty,
+    ]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

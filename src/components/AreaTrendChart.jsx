@@ -42,6 +42,35 @@ function parseAxisValue(text, kind) {
   return num;
 }
 
+// The per-point pinned tooltip (hover-a-node value) always spells "hours"
+// metrics out fully as h:mm:ss — matching the real product's node-hover
+// callout — even though the Y-axis ticks for the same metric stay compact
+// ("1.3h") since there's no reference showing the axis itself expanded.
+function formatHoursFull(v) {
+  const totalSeconds = Math.round(Math.max(0, v) * 3600);
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+  return `${h}h:${String(m).padStart(2, "0")}m:${String(s).padStart(2, "0")}s`;
+}
+
+function parseHoursFull(text) {
+  const match = String(text).match(/(-?\d+)\s*h\s*:?\s*(\d+)?\s*m\s*:?\s*(\d+)?\s*s?/i);
+  if (!match) return parseAxisValue(text, "hours");
+  const h = parseInt(match[1], 10) || 0;
+  const m = parseInt(match[2], 10) || 0;
+  const s = parseInt(match[3], 10) || 0;
+  return h + m / 60 + s / 3600;
+}
+
+function formatPinnedValue(v, kind) {
+  return kind === "hours" ? formatHoursFull(v) : formatTick(v, kind);
+}
+
+function parsePinnedValue(text, kind) {
+  return kind === "hours" ? parseHoursFull(text) : parseAxisValue(text, kind);
+}
+
 // Reports which point is hovered (by label match) — not its pixel
 // position, since Recharts' reported coordinate.y is unreliable here.
 function TooltipCapture({ active, payload, label, chartData, onActive }) {
@@ -311,12 +340,14 @@ export default function AreaTrendChart({
             <div className="flex items-center justify-center gap-1.5 mt-0.5">
               <span className="w-[7px] h-[7px] rounded-full border-[1.5px] border-[var(--tt-accent)] bg-white shrink-0" />
               <Editable
-                value={formatTick(data[activeIndex].value, yTickFormatter)}
+                value={formatPinnedValue(data[activeIndex].value, yTickFormatter)}
                 onChange={(text) => {
-                  const parsed = parseAxisValue(text, yTickFormatter);
+                  const parsed = parsePinnedValue(text, yTickFormatter);
                   if (parsed !== null) onChangeY(activeIndex, parsed);
                 }}
-                className="text-[15px] font-semibold text-black"
+                className={`font-semibold text-black ${
+                  yTickFormatter === "hours" ? "text-[14px]" : "text-[15px]"
+                }`}
               />
             </div>
           </div>
